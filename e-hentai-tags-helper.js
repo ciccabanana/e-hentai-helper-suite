@@ -10,7 +10,7 @@
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/@saninn__logger.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/tagify.js
 
-// @resource    customCSS https://raw.githubusercontent.com/yairEO/tagify/develop/dist/tagify.css
+// @resource    customCSS https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/tagify.css
 
 // @grant GM_getResourceText
 // @grant GM_addStyle
