@@ -7,10 +7,10 @@
 
 .tagify {
     font-weight: bold;
-    background-color: #34353b; /* CHANGABLE */
+    background-color: #edeada; /* CHANGABLE */
     width: 50em;
     border-radius: 6px 6px 6px 6px;
-    --tags-border-color: #8d8d8d; /* CHANGABLE */
+    --tags-border-color: #B5A4A4; /* CHANGABLE */
     --tag-bg: #E5E5E5;
     --tag-hover: #D3E2E2;
     --tag-text-color: #f1f1f1;
@@ -50,8 +50,8 @@
 }
 
 .tagify:hover {
-    background-color: #43464e;
-    border-color: #8d8d8d /* CHANGABLE */
+    background-color: #F3F0E0; /* CHANGABLE */
+    border-color: #B5A4A4 /* CHANGABLE */
 }
 
 .tagify.tagify--focus {
