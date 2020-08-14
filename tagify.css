@@ -258,7 +258,8 @@
 }
 
 .tagify__tag__removeBtn::after {
-    content: "\00D7"
+    /* Little problem here */
+    content: "\00D7" 
 }
 
 .tagify__tag__removeBtn:hover {
