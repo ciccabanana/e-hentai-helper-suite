@@ -8,7 +8,7 @@ Collection of script for a better navigation on e-hentai
   <img src="/docs/tag-helper.gif?raw=true" />
 </p>
 
-![](/docs/tag-helper.gif?raw=true)
+![](/docs/tag-helper.gif)
 
 Replace normal search bar with new one whit autocomplete of tags
 
