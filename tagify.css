@@ -1,25 +1,26 @@
+
+
 .tagcomplete {
     position: relative;
     display: inline-block;
     margin: auto;
-    text-align: initial
+    text-align: initial;
+    vertical-align: middle;
 }
 
 .tagify {
     font-weight: bold;
-    background-color: #edeada; /* CHANGABLE */
-    width: 50em;
+    width: 36em;
     border-radius: 6px 6px 6px 6px;
-    --tags-border-color: #B5A4A4; /* CHANGABLE */
     --tag-bg: #E5E5E5;
-    --tag-hover: #D3E2E2;
+    /*--tag-hover: #D3E2E2; /* Replaced in tagify__tag:hover whith box-shadow */
     --tag-text-color: #f1f1f1;
-    --tag-text-color--edit: black;
+    /*--tag-text-color--edit: black; /* To disable */
     --tag-pad: 0.30em 0.5em;
     --tag-inset-shadow-size: 1.1em;
     --tag-invalid-color: #D39494;
     --tag-invalid-bg: rgba(211, 148, 148, 0.5);
-    --tag-remove-bg: rgba(211, 148, 148, 0.3);
+    --tag-remove-bg: #a53125;
     --tag-remove-btn-bg: none;
     --tag-remove-btn-bg--hover: #c77777;
     --tag--min-width: 1ch;
@@ -47,11 +48,6 @@
     to {
         transform: rotate(1turn)
     }
-}
-
-.tagify:hover {
-    background-color: #F3F0E0; /* CHANGABLE */
-    border-color: #B5A4A4 /* CHANGABLE */
 }
 
 .tagify.tagify--focus {
@@ -171,16 +167,18 @@
     transition: 120ms ease;
     animation: tags--bump .3s ease-out 1;
     box-shadow: 0 0 0 1.1em #e5e5e5 inset;
-    box-shadow: 0 0 0 calc(var(--tag-inset-shadow-size)) var(--tag-bg) inset
+    box-shadow: 0 0 0 calc(var(--tag-inset-shadow-size)) var(--tag-bg) inset;
 }
 
 .tagify__tag:hover:not([readonly]) div::before {
+    background-color: var(--tag-bg);
     top: -2px;
     right: -2px;
     bottom: -2px;
     left: -2px;
     box-shadow: 0 0 0 1.1em #d3e2e2 inset;
-    box-shadow: 0 0 0 var(--tag-inset-shadow-size) var(--tag-hover) inset
+    box-shadow: 0 0 0 var(--tag-inset-shadow-size) var(--tag-bg) inset;
+    box-shadow: inset 0 0 0 var(--tag-inset-shadow-size) rgba(255, 255, 255, 0.2);
 }
 
 .tagify__tag.tagify--noAnim {
@@ -269,7 +267,7 @@
 }
 
 .tagify__tag__removeBtn:hover+div>span {
-    opacity: .5
+    opacity: 1
 }
 
 .tagify__tag__removeBtn:hover+div::before {
@@ -348,7 +346,6 @@
     position: absolute;
     top: 0;
     z-index: 1;
-    color: #5C0D12; /* CHANGABLE */
     /*Color placeholder text*/
     white-space: nowrap;
     pointer-events: none;
@@ -439,9 +436,6 @@
     font-size: 10pt;
     max-height: 300px;
     overflow: hidden;
-    background: #EDEBDF; /* CHANGABLE */
-    /*bakgound della lista*/
-    border: 1px solid #D4D4D4; /* CHANGABLE */
     border-top-width: 0;
     box-shadow: 0 2px 4px -2px rgba(0, 0, 0, .2);
     transition: .25s cubic-bezier(0, 1, .5, 1)
@@ -474,12 +468,6 @@
 
 .tagify__dropdown__item:not(:last-child) {
     border-bottom: 1px solid#5e5e5e
-}
-
-.tagify__dropdown__item--active {
-    background: #F3F0E0!important; /* CHANGABLE */
-    /*bakdound elemento selezionato*/
-    color: #5C0D11 /* CHANGABLE */
 }
 
 .tagify__dropdown__item:active {
