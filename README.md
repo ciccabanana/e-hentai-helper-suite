@@ -5,7 +5,7 @@ Collection of script for a better navigation on e-hentai
 ## e-hentai-tags-helper
 
 <p align="center">
-  <img src="docs/tag-helper.gif" />
+  <img src=".docs/tag-helper.gif" />
 </p>
 
 Replace normal search bar with new one whit autocomplete of tags
@@ -36,9 +36,9 @@ Replace normal search bar with new one whit autocomplete of tags
 - x: OR mi: => misc
 
 ### ToDo
-- [ ] 
 - [ ] Settings interface
 - [ ] Possibility of user to personalize tags color
+- [ ] ...
 
 ## External Tools
 
