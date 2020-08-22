@@ -5,8 +5,10 @@ Collection of script for a better navigation on e-hentai
 ## e-hentai-tags-helper
 
 <p align="center">
-  <img src="/docs/tag-helper.gif?Rraw=true" />
+  <img src="/docs/tag-helper.gif?raw=true" />
 </p>
+
+![](/docs/tag-helper.gif?raw=true)
 
 Replace normal search bar with new one whit autocomplete of tags
 
