@@ -5,7 +5,7 @@ Collection of script for a better navigation on e-hentai
 ## e-hentai-tags-helper
 
 <p align="center">
-  <img src="docs/tag-helper.gif" />
+  <img src="doc/tag-helper.gif" />
 </p>
 
 Replace normal search bar with new one whit autocomplete of tags
@@ -14,6 +14,7 @@ Replace normal search bar with new one whit autocomplete of tags
 * Compatible with Tampermonkey, Greasemonkey and Violentmonkey
 * Fast loading ~40ms
 * Autocomplete of tags using site API
+* delayed server request during typing for not overload it
 * More fast autocomplete using category index [see below](#Category-index)
 * Colored tags by category &nbsp;
 ![](https://img.shields.io/static/v1?label=&message=female&color=f75e56)&nbsp;

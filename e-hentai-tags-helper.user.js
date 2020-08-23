@@ -33,60 +33,7 @@ console.time();
 (function () {
     'use strict';
 
-    var makeXMLRequest = function (url, method = "GET", body = null) {
-        var request = new XMLHttpRequest();
-
-        // Return it as a Promise
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-            // Setup our listener to process compeleted requests
-            request.onreadystatechange = function () {
-                // Only run if the request is complete
-                if (request.readyState !== 4) return;
-
-                // Process the response
-                if (request.status >= 200 && request.status < 300) {
-                    // If successful
-                    resolve(request);
-                } else {
-                    // If failed
-                    reject({
-                        status: request.status,
-                        statusText: request.statusText
-                    });
-                }
-
-            };
-
-            // Setup our HTTP request
-            request.open(method, url, true);
-            //request.setRequestHeader("Content-Type", "application/json");
-            //request.withCredentials = true;
-
-            // Send the request
-            request.send(body);
-            }, 200);
-        });
-    };
-
-    var getResourceText = function (resource, func) {
-        if (typeof (GM_getResourceText) !== 'undefined') {
-            // Tampermonkey and Violentmonkey
-            func(GM_getResourceText(resource))
-        } else if (typeof (GM.getResourceUrl) !== 'undefined') {
-            // Greasemonkey and Tampermonkey (If TM compatibility is on)
-            GM.getResourceUrl(resource).then(function (blobURL) {
-
-                makeXMLRequest(blobURL).then(function (result) {
-                    func(result.responseText);
-                }).catch((reason) => {
-                    mConsole.log('Reasion: ', reason);
-                });
-            }).catch((reason) => {
-                mConsole.log('Reasion: ', reason);
-            });
-        }
-    };
+    let typingTimer; 
 
     // Create custom mConsole
     var mConsole = new SaninnLogger('Tags Auto');
@@ -234,41 +181,44 @@ console.time();
         if (debug)
             mConsole.log("onInput: ", e.detail);
 
-        tagify.settings.whitelist.length = 0; // reset current whitelist
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function () {
+            tagify.settings.whitelist.length = 0; // reset current whitelist
 
-        regex_replace(e.detail.value).then(function (pre_elab_result) {
-            // show the loader animation
-            tagify.loading(true).dropdown.hide.call(tagify);
+            regex_replace(e.detail.value).then(function (pre_elab_result) {
+                // show the loader animation
+                tagify.loading(true).dropdown.hide.call(tagify);
 
-            makeXMLRequest(api_url, "POST", JSON.stringify({
-                method: "tagsuggest",
-                text: pre_elab_result
-            }))
-                .then(function (result) {
+                makeXMLRequest(api_url, "POST", JSON.stringify({
+                    method: "tagsuggest",
+                    text: pre_elab_result
+                })).then(function (result) {
 
-                    result = JSON.parse(result.responseText);
-                    var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
-                    var a = Object.values(result.tags).map(function (key) {
-                        return {
-                            value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
-                            detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
-                            editable: false
-                        };
+                        result = JSON.parse(result.responseText);
+                        var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
+                        var a = Object.values(result.tags).map(function (key) {
+                            return {
+                                value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
+                                detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
+                                editable: false
+                            };
+                        });
+
+                        // Add element in whitelist
+                        tagify.settings.whitelist.splice(0, a.length, ...a);
+
+                        // render the suggestions dropdown.
+                        tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
+
+                    }).catch((reason) => {
+                        mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
                     });
+            }).catch((reason) => {
+                if (debug)
+                    mConsole.log('Pre-request elab failed. Reasion: ', reason);
+            });
+        }, 400);
 
-                    // Add element in whitelist
-                    tagify.settings.whitelist.splice(0, a.length, ...a);
-
-                    // render the suggestions dropdown.
-                    tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
-
-                }).catch((reason) => {
-                    mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
-                });
-        }).catch((reason) => {
-            if (debug)
-                mConsole.log('Pre-request elab failed. Reasion: ', reason);
-        });
     }
 
     function onDropdownSelect(e) {
@@ -385,6 +335,61 @@ console.time();
         style.textContent = css;
         head.appendChild(style);
         return style; //optional, but convenient for changing the styling later.
+    };
+
+    function makeXMLRequest(url, method = "GET", body = null) {
+        var request = new XMLHttpRequest();
+
+        // Return it as a Promise
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+            // Setup our listener to process compeleted requests
+            request.onreadystatechange = function () {
+                // Only run if the request is complete
+                if (request.readyState !== 4) return;
+
+                // Process the response
+                if (request.status >= 200 && request.status < 300) {
+                    // If successful
+                    resolve(request);
+                } else {
+                    // If failed
+                    reject({
+                        status: request.status,
+                        statusText: request.statusText
+                    });
+                }
+
+            };
+
+            // Setup our HTTP request
+            request.open(method, url, true);
+            //request.setRequestHeader("Content-Type", "application/json");
+            //request.withCredentials = true;
+
+            // Send the request
+            request.send(body);
+            }, 200);
+        });
+    };
+
+    function getResourceText (resource, func) {
+        if (typeof (GM_getResourceText) !== 'undefined') {
+            // Tampermonkey and Violentmonkey
+            func(GM_getResourceText(resource))
+        } else if (typeof (GM.getResourceUrl) !== 'undefined') {
+            // Greasemonkey and Tampermonkey (If TM compatibility is on)
+            GM.getResourceUrl(resource).then(function (blobURL) {
+
+                makeXMLRequest(blobURL).then(function (result) {
+                    func(result.responseText);
+                }).catch((reason) => {
+                    mConsole.log('Reasion: ', reason);
+                });
+            }).catch((reason) => {
+                mConsole.log('Reasion: ', reason);
+            });
+        }
     };
 
     // Your code here...
