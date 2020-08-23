@@ -7,16 +7,16 @@
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
 // @supportURL https://github.com/ciccabanana/e-hentai-helper-suite/issues
-// @updateURL   https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/e-hentai-tags-helper.js
+// @updateURL   https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/e-hentai-tags-helper.js
 // @include     *://e-hentai.org/
 // @include     *://exhentai.org/
 // @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_.*)/
 
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/library/@saninn__logger.js
-// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/library/jQuery.tagify.min.js
+// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/@saninn__logger.js
+// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/jQuery.tagify.min.js
 
-// @resource    TagifyCSS https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/resource/tagify.css
+// @resource    TagifyCSS https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/resource/tagify.css
 
 // @grant   GM_getResourceText
 // @grant   GM.getResourceUrl
