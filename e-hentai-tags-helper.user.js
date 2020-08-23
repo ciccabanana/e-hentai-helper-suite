@@ -8,8 +8,9 @@
 // @description     Replace normal search bar with new one whit autocomplete of tags
 // @supportURL https://github.com/ciccabanana/e-hentai-helper-suite/issues
 // @updateURL   https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/e-hentai-tags-helper.js
-// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_.*|)/
-// @eexclude
+// @include     *://e-hentai.org/
+// @include     *://exhentai.org/
+// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_.*)/
 
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/@saninn__logger.js
@@ -18,11 +19,7 @@
 // @resource    TagifyCSS https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/tagify.css
 
 // @grant   GM_getResourceText
-// @grant   GM_info
-
 // @grant   GM.getResourceUrl
-// @grant   GM.info
-// @grant   GM.xmlHttpRequest
 
 // ==/UserScript==
 
