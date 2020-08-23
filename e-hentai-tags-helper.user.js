@@ -13,10 +13,10 @@
 // @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_.*)/
 
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/@saninn__logger.js
-// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/jQuery.tagify.min.js
+// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/library/@saninn__logger.js
+// @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/library/jQuery.tagify.min.js
 
-// @resource    TagifyCSS https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/tagify.css
+// @resource    TagifyCSS https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/develop/resource/tagify.css
 
 // @grant   GM_getResourceText
 // @grant   GM.getResourceUrl
