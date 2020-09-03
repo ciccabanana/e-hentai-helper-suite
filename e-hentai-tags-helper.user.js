@@ -26,7 +26,8 @@
 
 var debug = true;
 
-console.time();
+if (debug)
+    console.time();
 (function () {
     'use strict';
 
@@ -391,5 +392,5 @@ console.time();
 
     // Your code here...
 })();
-
-console.timeEnd();
+if (debug)
+    console.timeEnd();
