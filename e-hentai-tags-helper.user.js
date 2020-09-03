@@ -10,7 +10,7 @@
 // @updateURL   https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/e-hentai-tags-helper.js
 // @include     *://e-hentai.org/
 // @include     *://exhentai.org/
-// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_.*)/
+// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_.*|\?page.*)/
 
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/@saninn__logger.js
