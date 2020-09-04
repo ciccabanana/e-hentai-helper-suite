@@ -24,7 +24,7 @@
 // ==/UserScript==
 
 
-var debug = true;
+var debug = false;
 
 if (debug)
     console.time();
