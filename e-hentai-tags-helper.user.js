@@ -91,29 +91,33 @@ if (debug)
         }`);
     }
 
-    // Hide the original search bar
-    $("#searchbox > form > p:nth-child(3)").attr('style', 'display:none;');
-
     // Create new container
     var container = document.createElement("DIV");
-    container.setAttribute("class", "tagcomplete");
+    container.setAttribute("class", "tagcomplete");    
+    container.setAttribute("id", "c_aut_comp");
 
     // Create new input text
     var tag_bar = document.createElement("input");
     tag_bar.setAttribute("type", "text");
-    tag_bar.setAttribute("id", "tagname_new_test");
-    tag_bar.setAttribute("name", "tagname_new_test");
+    tag_bar.setAttribute("id", "tag_name_bar");
+    tag_bar.setAttribute("name", "tag_name_bar");
     tag_bar.setAttribute("placeholder", "Insert tags ");
     tag_bar.setAttribute("autofocus", '');
 
+    if(location.pathname == "/favorites.php"){
+        var selector = "body > div.ido > div:nth-child(3) > form > div";
+    }
+    
+    // Hide the original search bar
+    $(selector).attr('style', 'display:none;');
     // Append 
     container.appendChild(tag_bar);
-    $("#searchbox > form > p:nth-child(3)").after(container);
+    $(selector).after(container);
 
     // Clone and append button "Clear Filter"
-    $("#searchbox > form > p:nth-child(3) > input[type=button]:nth-child(3)").clone().insertAfter("#searchbox > form > div.tagcomplete");
+    $(selector.concat(" > input[type=button]:nth-child(3)")).clone().insertAfter("#c_aut_comp");
     // Clone and append button "Apply Filter"
-    $("#searchbox > form > p:nth-child(3) > input[type=submit]:nth-child(2)").clone().insertAfter("#searchbox > form > div.tagcomplete");
+    $(selector.concat(" > input[type=submit]:nth-child(2)")).clone().insertAfter("#c_aut_comp");
 
 
     // Create tagify bar
@@ -147,7 +151,7 @@ if (debug)
     });
 
     // Get current search value
-    var old_input = $("#f_search")[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
+    var old_input = $('[name="f_search"]')[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
     if (old_input) {
         old_input = old_input.map(function (item, index) {
             return {
