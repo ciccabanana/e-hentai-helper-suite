@@ -152,17 +152,10 @@ if (debug)
     });
 
     // Get current search value
-    var old_input = $('[name="f_search"]')[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
-    if (old_input) {
-        old_input = old_input.map(function (item, index) {
-            return {
-                value: item.replace(/["\'\$]/g, ''),
-                detail: item.match(/^.*:.*$/g) ? item : NaN,
-                editable: item.match(/^.*:.*$/g) ? false : true
-            };
-        });
-        tagify.addTags(old_input);
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const old_input = JSON.parse(urlParams.get('tag_name_bar'));
+    tagify.addTags(old_input);
+
 
     // Set event listeners
     tagify.on('add', onAddTag).on('remove', onRemoveTag).on('input', onInput).on('dropdown:select', onDropdownSelect).on('change', onChange);
@@ -236,11 +229,11 @@ if (debug)
         var text = "";
         if (e.detail.value) {
             var list = JSON.parse(e.detail.value);
-            list = list.map(x => x.detail ? x.detail : `"${x.value}"`); // estraggo i dettagli
+            list = list.map(x => x.detail ? x.detail : `${x.value}`); // estraggo i dettagli
             text = list.join(" ");
         }
 
-        $("#f_search")[0].value = text;
+        $('[name="f_search"]')[0].value = text;
     }
 
     function set_tag_color_e(tagData) {
