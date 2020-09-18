@@ -153,7 +153,20 @@ if (debug)
 
     // Get current search value
     const urlParams = new URLSearchParams(window.location.search);
-    const old_input = JSON.parse(urlParams.get('tag_name_bar'));
+    var old_input = JSON.parse(urlParams.get('tag_name_bar'));
+    if(old_input == null){
+        old_input = $('[name="f_search"]')[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
+        if (old_input) {
+            old_input = old_input.map(function (item, index) {
+                return {
+                    value: item.replace(/["\'\$]/g, ''),
+                    detail: item.match(/^.*:.*$/g) ? item : null,
+                    editable: item.match(/^.*:.*$/g) ? false : true
+                };
+            });
+        }
+    }
+
     tagify.addTags(old_input);
 
 
