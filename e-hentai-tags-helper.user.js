@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.1
+// @version 0.1.1
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
@@ -10,8 +10,7 @@
 // @updateURL   https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/e-hentai-tags-helper.js
 // @include     *://e-hentai.org/
 // @include     *://exhentai.org/
-// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_.*|\?page.*)/
-
+// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_search.*|\?f_cats.*|\?tag_name_bar.*|\?f_shash.*|\?page.*|favorites\.php\?.*)/
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/@saninn__logger.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/jQuery.tagify.min.js
@@ -91,29 +90,34 @@ if (debug)
         }`);
     }
 
-    // Hide the original search bar
-    $("#searchbox > form > p:nth-child(3)").attr('style', 'display:none;');
-
     // Create new container
     var container = document.createElement("DIV");
-    container.setAttribute("class", "tagcomplete");
+    container.setAttribute("class", "tagcomplete");    
+    container.setAttribute("id", "c_aut_comp");
 
     // Create new input text
     var tag_bar = document.createElement("input");
     tag_bar.setAttribute("type", "text");
-    tag_bar.setAttribute("id", "tagname_new_test");
-    tag_bar.setAttribute("name", "tagname_new_test");
+    tag_bar.setAttribute("id", "tag_name_bar");
+    tag_bar.setAttribute("name", "tag_name_bar");
     tag_bar.setAttribute("placeholder", "Insert tags ");
     tag_bar.setAttribute("autofocus", '');
 
+    var selector = "#searchbox > form > p:nth-child(3)";
+    if(location.pathname == "/favorites.php"){
+        selector = "body > div.ido > div:nth-child(3) > form > div";
+    }
+    
+    // Hide the original search bar
+    $(selector).attr('style', 'display:none;');
     // Append 
     container.appendChild(tag_bar);
-    $("#searchbox > form > p:nth-child(3)").after(container);
+    $(selector).after(container);
 
     // Clone and append button "Clear Filter"
-    $("#searchbox > form > p:nth-child(3) > input[type=button]:nth-child(3)").clone().insertAfter("#searchbox > form > div.tagcomplete");
+    $(selector.concat(" > input[type=button]:nth-child(3)")).clone().insertAfter("#c_aut_comp");
     // Clone and append button "Apply Filter"
-    $("#searchbox > form > p:nth-child(3) > input[type=submit]:nth-child(2)").clone().insertAfter("#searchbox > form > div.tagcomplete");
+    $(selector.concat(" > input[type=submit]:nth-child(2)")).clone().insertAfter("#c_aut_comp");
 
 
     // Create tagify bar
@@ -147,17 +151,23 @@ if (debug)
     });
 
     // Get current search value
-    var old_input = $("#f_search")[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
-    if (old_input) {
-        old_input = old_input.map(function (item, index) {
-            return {
-                value: item.replace(/["\'\$]/g, ''),
-                detail: item.match(/^.*:.*$/g) ? item : NaN,
-                editable: item.match(/^.*:.*$/g) ? false : true
-            };
-        });
-        tagify.addTags(old_input);
+    const urlParams = new URLSearchParams(window.location.search);
+    var old_input = JSON.parse(urlParams.get('tag_name_bar'));
+    if(old_input == null){
+        old_input = $('[name="f_search"]')[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
+        if (old_input) {
+            old_input = old_input.map(function (item, index) {
+                return {
+                    value: item.replace(/["\'\$]/g, ''),
+                    detail: item.match(/^.*:.*$/g) ? item : null,
+                    editable: item.match(/^.*:.*$/g) ? false : true
+                };
+            });
+        }
     }
+
+    tagify.addTags(old_input);
+
 
     // Set event listeners
     tagify.on('add', onAddTag).on('remove', onRemoveTag).on('input', onInput).on('dropdown:select', onDropdownSelect).on('change', onChange);
@@ -231,11 +241,11 @@ if (debug)
         var text = "";
         if (e.detail.value) {
             var list = JSON.parse(e.detail.value);
-            list = list.map(x => x.detail ? x.detail : `"${x.value}"`); // estraggo i dettagli
+            list = list.map(x => x.detail ? x.detail : `${x.value}`); // estraggo i dettagli
             text = list.join(" ");
         }
 
-        $("#f_search")[0].value = text;
+        $('[name="f_search"]')[0].value = text;
     }
 
     function set_tag_color_e(tagData) {
