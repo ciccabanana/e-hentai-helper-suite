@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.1.1
+// @version 0.1.2
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
@@ -31,6 +31,7 @@ if (debug)
     'use strict';
 
     let typingTimer; 
+    var typing = false;
 
     // Create custom mConsole
     var mConsole = new SaninnLogger('Tags Auto');
@@ -170,12 +171,13 @@ if (debug)
 
 
     // Set event listeners
-    tagify.on('add', onAddTag).on('remove', onRemoveTag).on('input', onInput).on('dropdown:select', onDropdownSelect).on('change', onChange);
+    tagify.on('add', onAddTag).on('remove', onRemoveTag).on('input', onInput).on('dropdown:select', onDropdownSelect).on('change', onChange).on('keydown', onKeyDown);
 
     // tag added callback
     function onAddTag(e) {
         if (debug)
             mConsole.log("onAddTag: ", e.detail.data);
+        typing = false;
     }
 
     // tag remvoed callback
@@ -184,11 +186,20 @@ if (debug)
             mConsole.log("onRemoveTag:", e.detail.data);
     }
 
+    function onKeyDown(e) {
+        if (e.detail.originalEvent.keyCode == 13 && !typing){
+            $("#searchbox > form").submit();
+            e.preventDefault();
+        }
+        if (debug)
+            mConsole.log(e.type, e.detail, typing)
+    }
+
     // on character(s) added/removed (user is typing/deleting)
     function onInput(e) {
         if (debug)
             mConsole.log("onInput: ", e.detail);
-
+        typing = true;
         clearTimeout(typingTimer);
         typingTimer = setTimeout(function () {
             tagify.settings.whitelist.length = 0; // reset current whitelist
