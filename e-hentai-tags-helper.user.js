@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.1.3
+// @version 0.1.4
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
@@ -10,7 +10,7 @@
 // @updateURL   https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/e-hentai-tags-helper.js
 // @include     *://e-hentai.org/
 // @include     *://exhentai.org/
-// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_search.*|\?f_cats.*|\?tag_name_bar.*|\?f_shash.*|\?page.*|favorites\.php\?.*)/
+// @include     /https?:\/\/e(-|x)hentai\.org\/(watched.*|tag\/.*|\?f_search.*|\?f_cats.*|\?tag_name_bar.*|\?f_shash.*|\?page.*|favorites\.php.*)/
 // @require https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/@saninn__logger.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/jQuery.tagify.min.js
