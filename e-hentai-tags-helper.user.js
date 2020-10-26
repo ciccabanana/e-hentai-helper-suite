@@ -333,9 +333,9 @@ if (debug)
             var reg = inp_text.replace(/["\']/g, "");
 
             if (reg.match(/^(x|mi).*:/)) {
-                reg = reg.replace(/^(x|mi).*:/, "misc:");
+                reg = reg.replace(/^(x|mi).*:/i, "misc:");
             } else {
-                reg = reg.replace(/^f.*:/, "female:").replace(/^m.*:/, "male:").replace(/^r.*:/, "reclass:").replace(/^l.*:/, "language:").replace(/^p.*:/, "parody:").replace(/^c.*:/, "character:").replace(/^g.*:/, "group:").replace(/^a.*:/, "artist:");
+                reg = reg.replace(/^f.*:/i, "female:").replace(/^m.*:/i, "male:").replace(/^r.*:/i, "reclass:").replace(/^l.*:/i, "language:").replace(/^p.*:/i, "parody:").replace(/^c.*:/i, "character:").replace(/^g.*:/i, "group:").replace(/^a.*:/i, "artist:");
             }
             if (reg.replace(/^.*:/, "").length < 2) {
                 reject("length < 2");
