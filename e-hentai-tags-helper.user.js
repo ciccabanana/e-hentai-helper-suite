@@ -27,10 +27,11 @@ var debug = false;
 
 if (debug)
     console.time('[Tags Auto]: Loading time');
+
 (function () {
     'use strict';
 
-    let typingTimer; 
+    let typingTimer;
     var typing = false;
 
     // Create custom mConsole
@@ -93,7 +94,7 @@ if (debug)
 
     // Create new container
     var container = document.createElement("DIV");
-    container.setAttribute("class", "tagcomplete");    
+    container.setAttribute("class", "tagcomplete");
     container.setAttribute("id", "c_aut_comp");
 
     // Create new input text
@@ -105,10 +106,10 @@ if (debug)
     tag_bar.setAttribute("autofocus", '');
 
     var selector = "#searchbox > form > p:nth-child(3)";
-    if(location.pathname == "/favorites.php"){
+    if (location.pathname == "/favorites.php") {
         selector = "body > div.ido > div:nth-child(3) > form > div";
     }
-    
+
     // Hide the original search bar
     $(selector).attr('style', 'display:none;');
     // Append 
@@ -154,7 +155,7 @@ if (debug)
     // Get current search value
     const urlParams = new URLSearchParams(window.location.search);
     var old_input = JSON.parse(urlParams.get('tag_name_bar'));
-    if(old_input == null){
+    if (old_input == null) {
         old_input = $('[name="f_search"]')[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
         if (old_input) {
             old_input = old_input.map(function (item, index) {
@@ -168,7 +169,6 @@ if (debug)
     }
 
     tagify.addTags(old_input);
-
 
     // Set event listeners
     tagify.on('add', onAddTag).on('remove', onRemoveTag).on('input', onInput).on('dropdown:select', onDropdownSelect).on('change', onChange).on('keydown', onKeyDown);
@@ -187,12 +187,19 @@ if (debug)
     }
 
     function onKeyDown(e) {
-        if (e.detail.originalEvent.keyCode == 13 && !typing){
-            $("#searchbox > form").submit();
+        if (e.detail.originalEvent.keyCode == 13 &&
+            !tagify.state.inputText && // assuming user is not in the middle oy adding a tag
+            !tagify.state.editing // user not editing a tag
+        ) {
+            var selector = "#searchbox > form";
+            if (location.pathname == "/favorites.php") {
+                selector = "body > div.ido > div:nth-child(3) > form";
+            }
+            $(selector).submit();
             e.preventDefault();
         }
         if (debug)
-            mConsole.log(e.type, e.detail, typing)
+            mConsole.log(e.type, e.detail)
     }
 
     // on character(s) added/removed (user is typing/deleting)
@@ -213,25 +220,25 @@ if (debug)
                     text: pre_elab_result
                 })).then(function (result) {
 
-                        result = JSON.parse(result.responseText);
-                        var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
-                        var a = Object.values(result.tags).map(function (key) {
-                            return {
-                                value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
-                                detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
-                                editable: false
-                            };
-                        });
-
-                        // Add element in whitelist
-                        tagify.settings.whitelist.splice(0, a.length, ...a);
-
-                        // render the suggestions dropdown.
-                        tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
-
-                    }).catch((reason) => {
-                        mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
+                    result = JSON.parse(result.responseText);
+                    var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
+                    var a = Object.values(result.tags).map(function (key) {
+                        return {
+                            value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
+                            detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
+                            editable: false
+                        };
                     });
+
+                    // Add element in whitelist
+                    tagify.settings.whitelist.splice(0, a.length, ...a);
+
+                    // render the suggestions dropdown.
+                    tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
+
+                }).catch((reason) => {
+                    mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
+                });
             }).catch((reason) => {
                 if (debug)
                     mConsole.log('Pre-request elab failed. Reasion: ', reason);
@@ -357,42 +364,44 @@ if (debug)
     };
 
     function makeXMLRequest(url, method = "GET", body = null) {
+        
         var request = new XMLHttpRequest();
 
         // Return it as a Promise
         return new Promise(function (resolve, reject) {
             setTimeout(function () {
-            // Setup our listener to process compeleted requests
-            request.onreadystatechange = function () {
-                // Only run if the request is complete
-                if (request.readyState !== 4) return;
+                // Setup our listener to process compeleted requests
+                request.onreadystatechange = function () {
+                    // Only run if the request is complete
+                    if (request.readyState !== 4) return;
 
-                // Process the response
-                if (request.status >= 200 && request.status < 300) {
-                    // If successful
-                    resolve(request);
-                } else {
-                    // If failed
-                    reject({
-                        status: request.status,
-                        statusText: request.statusText
-                    });
-                }
+                    // Process the response
+                    if (request.status >= 200 && request.status < 300) {
+                        // If successful
+                        resolve(request);
+                    } else {
+                        // If failed
+                        reject({
+                            status: request.status,
+                            statusText: request.statusText
+                        });
+                    }
 
-            };
+                };
 
-            // Setup our HTTP request
-            request.open(method, url, true);
-            //request.setRequestHeader("Content-Type", "application/json");
-            //request.withCredentials = true;
+                // Setup our HTTP request
+                request.open(method, url, true);
+                //request.setRequestHeader("Content-Type", "application/json");
+                //request.withCredentials = true;
 
-            // Send the request
-            request.send(body);
+                // Send the request
+                request.send(body);
             }, 200);
         });
+
     };
 
-    function getResourceText (resource, func) {
+    function getResourceText(resource, func) {
         if (typeof (GM_getResourceText) !== 'undefined') {
             // Tampermonkey and Violentmonkey
             func(GM_getResourceText(resource))
