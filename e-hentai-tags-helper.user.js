@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.1.5
+// @version 0.1.5.1
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
@@ -230,7 +230,7 @@ if (debug)
                 tagify.settings.whitelist.push(...a, ...tagify.value)
 
                 // render the suggestions dropdown.
-                tagify.loading(false).dropdown.show.call(tagify, e.detail.value);
+                tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
 
             }).catch((reason) => {
                 mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
