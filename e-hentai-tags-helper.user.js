@@ -32,7 +32,6 @@ if (debug)
     'use strict';
 
     let typingTimer;
-    var typing = false;
 
     // Create custom mConsole
     var mConsole = new SaninnLogger('Tags Auto');
@@ -121,7 +120,6 @@ if (debug)
     // Clone and append button "Apply Filter"
     $(selector.concat(" > input[type=submit]:nth-child(2)")).clone().insertAfter("#c_aut_comp");
 
-
     // Create tagify bar
     var tagify = new Tagify(tag_bar, {
         transformTag: set_tag_color,
@@ -177,7 +175,6 @@ if (debug)
     function onAddTag(e) {
         if (debug)
             mConsole.log("onAddTag: ", e.detail.data);
-        typing = false;
     }
 
     // tag remvoed callback
@@ -206,45 +203,42 @@ if (debug)
     function onInput(e) {
         if (debug)
             mConsole.log("onInput: ", e.detail);
-        typing = true;
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(function () {
-            tagify.settings.whitelist.length = 0; // reset current whitelist
 
-            regex_replace(e.detail.value).then(function (pre_elab_result) {
-                // show the loader animation
-                tagify.loading(true).dropdown.hide.call(tagify);
+        tagify.settings.whitelist.length = 0; // reset current whitelist
 
-                makeXMLRequest(api_url, "POST", JSON.stringify({
-                    method: "tagsuggest",
-                    text: pre_elab_result
-                })).then(function (result) {
+        regex_replace(e.detail.value).then(function (pre_elab_result) {
+            // show the loader animation
+            tagify.loading(true);
 
-                    result = JSON.parse(result.responseText);
-                    var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
-                    var a = Object.values(result.tags).map(function (key) {
-                        return {
-                            value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
-                            detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
-                            editable: false
-                        };
-                    });
+            makeXMLRequest(api_url, "POST", JSON.stringify({
+                method: "tagsuggest",
+                text: pre_elab_result
+            })).then(function (result) {
 
-                    // Add element in whitelist
-                    tagify.settings.whitelist.splice(0, a.length, ...a);
-
-                    // render the suggestions dropdown.
-                    tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
-
-                }).catch((reason) => {
-                    mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
+                result = JSON.parse(result.responseText);
+                var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
+                var a = Object.values(result.tags).map(function (key) {
+                    return {
+                        value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
+                        detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
+                        editable: false
+                    };
                 });
-            }).catch((reason) => {
-                if (debug)
-                    mConsole.log('Pre-request elab failed. Reasion: ', reason);
-            });
-        }, 400);
 
+                // replace tagify "whitelist" array values with new values
+                // and add back the ones already choses as Tags
+                tagify.settings.whitelist.push(...a, ...tagify.value)
+
+                // render the suggestions dropdown.
+                tagify.loading(false).dropdown.show.call(tagify, e.detail.value);
+
+            }).catch((reason) => {
+                mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
+            });
+        }).catch((reason) => {
+            if (debug)
+                mConsole.log('Pre-request elab failed. Reasion: ', reason);
+        });
     }
 
     function onDropdownSelect(e) {
@@ -364,12 +358,13 @@ if (debug)
     };
 
     function makeXMLRequest(url, method = "GET", body = null) {
-        
+
+        clearTimeout(typingTimer); // abort last request
         var request = new XMLHttpRequest();
 
         // Return it as a Promise
         return new Promise(function (resolve, reject) {
-            setTimeout(function () {
+            typingTimer = setTimeout(function () {
                 // Setup our listener to process compeleted requests
                 request.onreadystatechange = function () {
                     // Only run if the request is complete
@@ -391,12 +386,12 @@ if (debug)
 
                 // Setup our HTTP request
                 request.open(method, url, true);
-                //request.setRequestHeader("Content-Type", "application/json");
-                //request.withCredentials = true;
+                request.setRequestHeader("Content-Type", "application/json");
+                request.withCredentials = true;
 
                 // Send the request
                 request.send(body);
-            }, 200);
+            }, 350);
         });
 
     };
