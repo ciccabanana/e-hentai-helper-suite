@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.1.4
+// @version 0.1.5
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
@@ -27,11 +27,11 @@ var debug = false;
 
 if (debug)
     console.time('[Tags Auto]: Loading time');
+
 (function () {
     'use strict';
 
-    let typingTimer; 
-    var typing = false;
+    let typingTimer;
 
     // Create custom mConsole
     var mConsole = new SaninnLogger('Tags Auto');
@@ -93,7 +93,7 @@ if (debug)
 
     // Create new container
     var container = document.createElement("DIV");
-    container.setAttribute("class", "tagcomplete");    
+    container.setAttribute("class", "tagcomplete");
     container.setAttribute("id", "c_aut_comp");
 
     // Create new input text
@@ -105,10 +105,10 @@ if (debug)
     tag_bar.setAttribute("autofocus", '');
 
     var selector = "#searchbox > form > p:nth-child(3)";
-    if(location.pathname == "/favorites.php"){
+    if (location.pathname == "/favorites.php") {
         selector = "body > div.ido > div:nth-child(3) > form > div";
     }
-    
+
     // Hide the original search bar
     $(selector).attr('style', 'display:none;');
     // Append 
@@ -119,7 +119,6 @@ if (debug)
     $(selector.concat(" > input[type=button]:nth-child(3)")).clone().insertAfter("#c_aut_comp");
     // Clone and append button "Apply Filter"
     $(selector.concat(" > input[type=submit]:nth-child(2)")).clone().insertAfter("#c_aut_comp");
-
 
     // Create tagify bar
     var tagify = new Tagify(tag_bar, {
@@ -154,7 +153,7 @@ if (debug)
     // Get current search value
     const urlParams = new URLSearchParams(window.location.search);
     var old_input = JSON.parse(urlParams.get('tag_name_bar'));
-    if(old_input == null){
+    if (old_input == null) {
         old_input = $('[name="f_search"]')[0].value.match(/\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?|(?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?|\"(?:[^\"]*)\"/g);
         if (old_input) {
             old_input = old_input.map(function (item, index) {
@@ -169,7 +168,6 @@ if (debug)
 
     tagify.addTags(old_input);
 
-
     // Set event listeners
     tagify.on('add', onAddTag).on('remove', onRemoveTag).on('input', onInput).on('dropdown:select', onDropdownSelect).on('change', onChange).on('keydown', onKeyDown);
 
@@ -177,7 +175,6 @@ if (debug)
     function onAddTag(e) {
         if (debug)
             mConsole.log("onAddTag: ", e.detail.data);
-        typing = false;
     }
 
     // tag remvoed callback
@@ -187,57 +184,61 @@ if (debug)
     }
 
     function onKeyDown(e) {
-        if (e.detail.originalEvent.keyCode == 13 && !typing){
-            $("#searchbox > form").submit();
+        if (e.detail.originalEvent.keyCode == 13 &&
+            !tagify.state.inputText && // assuming user is not in the middle oy adding a tag
+            !tagify.state.editing // user not editing a tag
+        ) {
+            var selector = "#searchbox > form";
+            if (location.pathname == "/favorites.php") {
+                selector = "body > div.ido > div:nth-child(3) > form";
+            }
+            $(selector).submit();
             e.preventDefault();
         }
         if (debug)
-            mConsole.log(e.type, e.detail, typing)
+            mConsole.log(e.type, e.detail)
     }
 
     // on character(s) added/removed (user is typing/deleting)
     function onInput(e) {
         if (debug)
             mConsole.log("onInput: ", e.detail);
-        typing = true;
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(function () {
-            tagify.settings.whitelist.length = 0; // reset current whitelist
 
-            regex_replace(e.detail.value).then(function (pre_elab_result) {
-                // show the loader animation
-                tagify.loading(true).dropdown.hide.call(tagify);
+        tagify.settings.whitelist.length = 0; // reset current whitelist
 
-                makeXMLRequest(api_url, "POST", JSON.stringify({
-                    method: "tagsuggest",
-                    text: pre_elab_result
-                })).then(function (result) {
+        regex_replace(e.detail.value).then(function (pre_elab_result) {
+            // show the loader animation
+            tagify.loading(true);
 
-                        result = JSON.parse(result.responseText);
-                        var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
-                        var a = Object.values(result.tags).map(function (key) {
-                            return {
-                                value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
-                                detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
-                                editable: false
-                            };
-                        });
+            makeXMLRequest(api_url, "POST", JSON.stringify({
+                method: "tagsuggest",
+                text: pre_elab_result
+            })).then(function (result) {
 
-                        // Add element in whitelist
-                        tagify.settings.whitelist.splice(0, a.length, ...a);
+                result = JSON.parse(result.responseText);
+                var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
+                var a = Object.values(result.tags).map(function (key) {
+                    return {
+                        value: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "#@$&#") : key.ns + ":" + key.tn,
+                        detail: key.tn.indexOf(" ") != -1 ? key.ns + ":\"" + key.tn + "$\"" : key.ns + ":" + key.tn + "$",
+                        editable: false
+                    };
+                });
 
-                        // render the suggestions dropdown.
-                        tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
+                // replace tagify "whitelist" array values with new values
+                // and add back the ones already choses as Tags
+                tagify.settings.whitelist.push(...a, ...tagify.value)
 
-                    }).catch((reason) => {
-                        mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
-                    });
+                // render the suggestions dropdown.
+                tagify.loading(false).dropdown.show.call(tagify, e.detail.value);
+
             }).catch((reason) => {
-                if (debug)
-                    mConsole.log('Pre-request elab failed. Reasion: ', reason);
+                mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
             });
-        }, 400);
-
+        }).catch((reason) => {
+            if (debug)
+                mConsole.log('Pre-request elab failed. Reasion: ', reason);
+        });
     }
 
     function onDropdownSelect(e) {
@@ -333,9 +334,9 @@ if (debug)
             var reg = inp_text.replace(/["\']/g, "");
 
             if (reg.match(/^(x|mi).*:/)) {
-                reg = reg.replace(/^(x|mi).*:/, "misc:");
+                reg = reg.replace(/^(x|mi).*:/i, "misc:");
             } else {
-                reg = reg.replace(/^f.*:/, "female:").replace(/^m.*:/, "male:").replace(/^r.*:/, "reclass:").replace(/^l.*:/, "language:").replace(/^p.*:/, "parody:").replace(/^c.*:/, "character:").replace(/^g.*:/, "group:").replace(/^a.*:/, "artist:");
+                reg = reg.replace(/^f.*:/i, "female:").replace(/^m.*:/i, "male:").replace(/^r.*:/i, "reclass:").replace(/^l.*:/i, "language:").replace(/^p.*:/i, "parody:").replace(/^c.*:/i, "character:").replace(/^g.*:/i, "group:").replace(/^a.*:/i, "artist:");
             }
             if (reg.replace(/^.*:/, "").length < 2) {
                 reject("length < 2");
@@ -357,42 +358,45 @@ if (debug)
     };
 
     function makeXMLRequest(url, method = "GET", body = null) {
+
+        clearTimeout(typingTimer); // abort last request
         var request = new XMLHttpRequest();
 
         // Return it as a Promise
         return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-            // Setup our listener to process compeleted requests
-            request.onreadystatechange = function () {
-                // Only run if the request is complete
-                if (request.readyState !== 4) return;
+            typingTimer = setTimeout(function () {
+                // Setup our listener to process compeleted requests
+                request.onreadystatechange = function () {
+                    // Only run if the request is complete
+                    if (request.readyState !== 4) return;
 
-                // Process the response
-                if (request.status >= 200 && request.status < 300) {
-                    // If successful
-                    resolve(request);
-                } else {
-                    // If failed
-                    reject({
-                        status: request.status,
-                        statusText: request.statusText
-                    });
-                }
+                    // Process the response
+                    if (request.status >= 200 && request.status < 300) {
+                        // If successful
+                        resolve(request);
+                    } else {
+                        // If failed
+                        reject({
+                            status: request.status,
+                            statusText: request.statusText
+                        });
+                    }
 
-            };
+                };
 
-            // Setup our HTTP request
-            request.open(method, url, true);
-            //request.setRequestHeader("Content-Type", "application/json");
-            //request.withCredentials = true;
+                // Setup our HTTP request
+                request.open(method, url, true);
+                request.setRequestHeader("Content-Type", "application/json");
+                request.withCredentials = true;
 
-            // Send the request
-            request.send(body);
-            }, 200);
+                // Send the request
+                request.send(body);
+            }, 350);
         });
+
     };
 
-    function getResourceText (resource, func) {
+    function getResourceText(resource, func) {
         if (typeof (GM_getResourceText) !== 'undefined') {
             // Tampermonkey and Violentmonkey
             func(GM_getResourceText(resource))
