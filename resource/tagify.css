@@ -107,7 +107,7 @@
 }
 
 .tac-settings {
-    background: oldlace;
+    /* background: oldlace; */
     /* #EDEBDF $('.ido').css('background-color') */
     box-sizing: border-box;
     height: 450px;
@@ -222,11 +222,6 @@ input[type="checkbox"].tacCheck:hover {
     cursor: pointer;
 }
 
-input[type="radio"].tacRadio {
-    accent-color: #B5A4A4;
-    /* #B5A4A4 $('#f_search').css('border-color') */
-}
-
 input[type="color"].tacColorPiker {
     -webkit-appearance: none;
     border: none;
@@ -271,7 +266,6 @@ input[type="text"].tacColorText:invalid {
     flex: auto;
 }
 
-
 .tac-overlay .applyContainer {
     padding-top: 5px;
     padding-right: 8px;
@@ -306,9 +300,7 @@ input[type="text"].tacColorText:invalid {
     min-height: 467px;
 }
 
-
 /* #endregion */
-
 
 .tagcomplete {
     position: relative;
@@ -349,8 +341,8 @@ input[type="text"].tacColorText:invalid {
     --tag--min-width: 1ch;
     --tag--max-width: auto;
     --tag-hide-transition: 0.3s;
-    --placeholder-color: rgba(241, 241, 241, 1);
     /* Edited */
+    /* --placeholder-color: rgba(241, 241, 241, 1); */
     /* --placeholder-color-focus: rgba(241, 241, 241, 1); */
     /* Edited */
     --loader-size: .8em;
@@ -461,7 +453,7 @@ input[type="text"].tacColorText:invalid {
     left: -9999em !important;
     transform: scale(0) !important; */
     /* My Add */
-    width: 42em;
+    width: 43em;
     height: 5em;
     /* My Add */
 }
