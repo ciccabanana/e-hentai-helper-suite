@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.2.1
+// @version 0.2.2
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
@@ -359,7 +359,10 @@ if (userSettings.debugConsole)
             }
             $('#setNotice').text('Applied Settings Will Take Effect On Reload');
             reload = 1;
-
+        });
+        $('.tacCheck').on("change", e => {            
+            $('#setNotice').text('Applied Settings Will Take Effect On Reload');
+            reload = 1;
         });
         $('#tac-apply').click(e => {
             userSettings.debugConsole = $("#dbConsole").is(":checked");
@@ -790,9 +793,8 @@ if (userSettings.debugConsole)
     let clickDebounce = null; // Debounce while cliccking, allow doubleclick
     let api_url = null; // Url for api request
     let sadpanda = {}; // For the tag style
-    let reload = false;
-
-    getResourceText("TagifyCSS", addStyle);
+    let reload = false; // For request of reload
+    let CSSxSite = null;
 
     // Print site details
     mConsole.log("Site api: ", location.hostname);
@@ -801,7 +803,7 @@ if (userSettings.debugConsole)
     if (location.hostname == "e-hentai.org") {
         api_url = "https://api.e-hentai.org/api.php";
         sadpanda = userSettings.style.base;
-        addStyle(`
+        CSSxSite = `
         .tagify {
             background-color: #EDEBDF;  /* #EDEBDF $('.ido').css('background-color') */
             --tags-border-color: #B5A4A4; /* #B5A4A4 $('#f_search').css('border-color') */ 
@@ -842,11 +844,11 @@ if (userSettings.debugConsole)
         .tac-overlay .applyContainer {
             border-top: 1px solid #5C0D11; /* #5C0D11 ('body').css('color') */
         }
-        `);
+        `;
     } else {
         api_url = "https://exhentai.org/api.php";
         sadpanda = userSettings.style.exhentai;
-        addStyle(`
+        CSSxSite = `
         .tagify {
             background-color: #4F535B;  /* #4F535B $('.ido').css('background-color') */
             --tags-border-color: #8D8D8D; /* #8D8D8D $('#f_search').css('border-color') */ 
@@ -887,7 +889,7 @@ if (userSettings.debugConsole)
         .tac-overlay .applyContainer {
             border-top: 1px solid #F1F1F1; /* #F1F1F1 ('body').css('color') */
         }
-        `);
+        `;
     }
 
     // #region element creation
@@ -936,6 +938,10 @@ if (userSettings.debugConsole)
     // Wait the element before assembly all the things
     await waitForElement(selector);
     mConsole.log("Website loded");
+
+    // Append all the style at the head
+    getResourceText("TagifyCSS", addStyle);
+    addStyle(CSSxSite);
 
     // Hide the original search bar
     userSettings.hideOriginal ? $(selector).attr('style', 'display:none;') : '';
