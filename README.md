@@ -9,12 +9,13 @@ Collection of userscripts for a better navigation on e-hentai
   Replace normal search bar with new one whit autocomplete of tags
 </p>
 
-**Direct Install:** [install](https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/e-hentai-tags-helper.js)
+**Direct Install:** [install](https://github.com/ciccabanana/e-hentai-helper-suite/blob/master/e-hentai-tags-helper.user.js)
+
 
 ### Features
 
 * Compatible with Tampermonkey, Greasemonkey and Violentmonkey
-* Fast loading ~40ms
+* Fast loading ~20ms
 * Autocomplete of tags using site API
 * Delayed API request during typing for avoid server overload
 * Fast autocomplete using category index (ignore case) [see below](#Category-index)
@@ -40,12 +41,34 @@ Collection of userscripts for a better navigation on e-hentai
 * c: => character
 * g: => group
 * a: => artist
-* x: OR mi: => misc
+* co: => cosplayer
+* x: OR mi: => mixed
+* mis: => temp
+* r: => reclass
+* o: other
+
+### New in the lastets version (0.2)
+
+* Fixed the compatibility with the site
+* Complete rewrite of the code.
+* The script will load together with the site
+* Support the Exclusion `-` and the OR `~` operator [See the ehwiki](https://ehwiki.org/wiki/Gallery_Searching#Operators). 
+* * You can write the tag directly with the operator or change the operator with a left click
+* Added settings interface
+* * Added the possibility to change the tags color
+* * Possibility to change the position of the dropdown
+* Removed [@saninn/logger](https://github.com/distante/saninn-logger) dependence
+* Integrated custom logger
+
+### Settings UI preview
+
+<img src="images/tag-helper-settings.png" width="80%" /><br>
 
 ### ToDo
 
-* [ ] Settings interface
-* [ ] Possibility of user to personalize tags color
+* [✔] Settings interface
+* [✔] Possibility of user to personalize tags color
+* [ ] Support for Qualifiers "tag:" / "weak:" / "title:" / "uploader:" / "uploaduid:" / "gid:" / "comment:" / "favnote:"
 * [ ] Compatibility to work in the insertion of new tags on the gallery page (Under evaluation)
 * [ ] ...
 
