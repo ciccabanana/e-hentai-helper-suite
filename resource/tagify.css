@@ -107,7 +107,7 @@
 }
 
 .tac-settings {
-    background: oldlace;
+    /* background: oldlace; */
     /* #EDEBDF $('.ido').css('background-color') */
     box-sizing: border-box;
     height: 450px;
