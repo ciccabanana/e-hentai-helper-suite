@@ -476,7 +476,7 @@ if (userSettings.debugConsole)
 
     function addStyle(css) {
         var head, style;
-=======
+
     /**
      * Add the string (CSS) to the page <head>
      * @param {string} CSS - CSS to add to the page
@@ -485,7 +485,7 @@ if (userSettings.debugConsole)
     const addStyle = async (CSS) => {
         let head,
             style;
->>>>>>> Stashed changes
+
         head = document.getElementsByTagName('head')[0];
         //if (!head) { return; }
         style = document.createElement('style');
