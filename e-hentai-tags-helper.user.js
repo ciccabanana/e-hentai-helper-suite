@@ -357,7 +357,7 @@ if (userSettings.debugConsole)
                 tagify.settings.whitelist.push(...a, ...tagify.value)
 
                 // render the suggestions dropdown.
-                tagify.loading(false).dropdown.show.call(tagify, e.detail.value);
+                tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
 
             }).catch((reason) => {
                 mConsole.log('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
