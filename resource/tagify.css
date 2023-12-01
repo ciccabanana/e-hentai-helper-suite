@@ -222,11 +222,6 @@ input[type="checkbox"].tacCheck:hover {
     cursor: pointer;
 }
 
-input[type="radio"].tacRadio {
-    accent-color: #B5A4A4;
-    /* #B5A4A4 $('#f_search').css('border-color') */
-}
-
 input[type="color"].tacColorPiker {
     -webkit-appearance: none;
     border: none;
