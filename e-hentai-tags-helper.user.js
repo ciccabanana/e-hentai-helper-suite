@@ -165,7 +165,6 @@ if (userSettings.debugConsole)
 
     //#region Support funtion
 
-<<<<<<< Updated upstream
     // Print curent wesite
     mConsole.log("Site api: ", location.hostname);
     mConsole.log(location.pathname);
