@@ -849,93 +849,42 @@ if (userSettings.debugConsole)
     mConsole.log("Location: ", location.pathname);
 
     if (location.hostname == "e-hentai.org") {
-        api_url = "https://api.e-hentai.org/api.php";
+    if (location.hostname == 'e-hentai.org') {
+        api_url = 'https://api.e-hentai.org/api.php';
         sadpanda = userSettings.style.base;
         CSSxSite = `
-        .tagify {
-            background-color: #EDEBDF;  /* #EDEBDF $('.ido').css('background-color') */
-            --tags-border-color: #B5A4A4; /* #B5A4A4 $('#f_search').css('border-color') */ 
-        }
-        .tagify:hover {
-            background-color: #F3F0E0; /* #F3F0E0 input[type="button"]:hover > background-color */ 
-            border-color: #B5A4A4; /* #B5A4A4 $('#f_search').css('border-color') */ 
-        }
-        .tagify__input::before {
-            color: #5C0D11; /* #5C0D11 ('body').css('color') */
-        }
-        .tagify__dropdown__wrapper {
-            background:  #EDEBDF;  /* #EDEBDF $('.ido').css('background-color') */
-            border: 1px solid #B5A4A4; /* #B5A4A4 $('#f_search').css('border-color') */ 
-        }
-        .tagify__dropdown__item--active {
-            background: #F3F0E0!important; /* #F3F0E0 input[type="button"]:hover > background-color */ 
-            color: #5C0D11; /* #5C0D11 ('body').css('color') */
-        }
-        .tagcomplete > .settings {
-            fill: #5C0D11; /* #5C0D11 ('body').css('color') */
-        }
-        .tac-overlay button {
-            border: 1px solid #B5A4A4; /* #B5A4A4 $('#f_search').css('border-color') */ 
-        }
-        .tac-settings {
-            background: #EDEBDF; /* #EDEBDF $('.ido').css('background-color') */
-        }
-        input[type="checkbox"].tacCheck {
-            border: 1px solid #B5A4A4; /* #B5A4A4 $('#f_search').css('border-color') */ 
-        }
-        input[type="radio"].tacRadio{
-            accent-color: #5C0D11; /* #5C0D11 ('body').css('color') */
-        }
-        #tac-topNav {
-            border-bottom: 1px solid #5C0D11; /* #5C0D11 ('body').css('color') */
-        }
-        .tac-overlay .applyContainer {
-            border-top: 1px solid #5C0D11; /* #5C0D11 ('body').css('color') */
+        :root{
+            --tagify-dd-bg-color: #EDEBDF;
+            --tagify-dd-color-primary: #5C0D11;
+
+            /* Moved from .tagify to :root*/
+            --tags-border-color: #B5A4A4;
+            --tags-hover-border-color: #B5A4A4;
+            --tags-focus-border-color: #B5A4A4;
+            --placeholder-color: #5C0D11;
+            --placeholder-color-focus: #5C0D11;
+
+            /*New var */
+            --tagify-hover-bg-color: #F3F0E0;
         }
         `;
     } else {
-        api_url = "https://exhentai.org/api.php";
+        api_url = 'https://exhentai.org/api.php';
         sadpanda = userSettings.style.exhentai;
         CSSxSite = `
-        .tagify {
-            background-color: #4F535B;  /* #4F535B $('.ido').css('background-color') */
-            --tags-border-color: #8D8D8D; /* #8D8D8D $('#f_search').css('border-color') */ 
-        }
-        .tagify:hover {
-            background-color: #43464E; /* #43464E input[type="button"]:hover > background-color */ 
-            border-color: #8D8D8D; /* #8D8D8D $('#f_search').css('border-color') */ 
-        }
-        .tagify__input::before {
-            color: #F1F1F1; /* #F1F1F1 ('body').css('color') */
-        }
-        .tagify__dropdown__wrapper {
-            background:  #4F535B;  /* #4F535B $('.ido').css('background-color') */
-            border: 1px solid #8D8D8D; /* #8D8D8D $('#f_search').css('border-color') */ 
-        }
-        .tagify__dropdown__item--active {
-            background: #43464E!important; /* #43464E input[type="button"]:hover > background-color */ 
-            color: #F1F1F1; /* #F1F1F1 ('body').css('color') */
-        }
-        .tagcomplete > .settings {
-            fill: #F1F1F1; /* #F1F1F1 ('body').css('color') */
-        }
-        .tac-overlay button {
-            border: 1px solid #8D8D8D; /* #8D8D8D $('#f_search').css('border-color') */ 
-        }
-        .tac-settings {
-            background: #4F535B; /* #4F535B $('.ido').css('background-color') */
-        }
-        input[type="checkbox"].tacCheck {
-            border: 1px solid #8D8D8D; /* #8D8D8D $('#f_search').css('border-color') */ 
-        }
-        input[type="radio"].tacRadio{
-            accent-color: #F1F1F1; /* #F1F1F1 ('body').css('color') */
-        }
-        #tac-topNav {
-            border-bottom: 1px solid #F1F1F1; /* #F1F1F1 ('body').css('color') */
-        }
-        .tac-overlay .applyContainer {
-            border-top: 1px solid #F1F1F1; /* #F1F1F1 ('body').css('color') */
+        :root{
+            --tagify-dd-bg-color: #4F535B;
+            --tagify-dd-color-primary: #F1F1F1;
+
+            /* Moved from .tagify to :root*/
+            --tags-border-color: #8D8D8D;
+            --tags-hover-border-color: #8D8D8D;
+            --tags-focus-border-color: #8D8D8D;
+            --placeholder-color: #F1F1F1;
+            --placeholder-color-focus: #F1F1F1;
+
+            /*New var */
+            --tagify-hover-bg-color: #43464E;
         }
         `;
     }
