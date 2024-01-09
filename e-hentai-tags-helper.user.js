@@ -66,39 +66,20 @@ const defaultSettings = {
 
 // Class wrapper for custom console
 class CustomConsole {
-
     log = (() => {
-        return Function.prototype.bind.call(
-            console.log,
-            console,
-            '%cTags Auto Complete',
-            'background-color: #2e51a2; color: white; padding: 2px 10px; border-radius: 3px;',
-        );
+        return Function.prototype.bind.call(console.log, console, '%cTags Auto Complete', 'background-color: #2e51a2; color: white; padding: 2px 10px; border-radius: 3px;');
     })();
 
     error = (() => {
-        return Function.prototype.bind.call(
-            console.error,
-            console,
-            '%cTags Auto Complete',
-            'background-color: #8f0000; color: white; padding: 2px 10px; border-radius: 3px;',
-        );
+        return Function.prototype.bind.call(console.error, console, '%cTags Auto Complete', 'background-color: #8f0000; color: white; padding: 2px 10px; border-radius: 3px;');
     })();
 
     info = (() => {
-        return Function.prototype.bind.call(
-            console.info,
-            console,
-            '%cTags Auto Complete',
-            'background-color: wheat; color: black; padding: 2px 10px; border-radius: 3px;',
-        );
+        return Function.prototype.bind.call(console.info, console, '%cTags Auto Complete', 'background-color: wheat; color: black; padding: 2px 10px; border-radius: 3px;');
     })();
 
     debug = (() => {
-        return Function.prototype.bind.call(console.debug, console,
-            '%cTags Auto Complete',
-            'background-color: steelblue; color: black; padding: 2px 10px; border-radius: 3px;',
-        );
+        return Function.prototype.bind.call(console.debug, console, '%cTags Auto Complete', 'background-color: steelblue; color: black; padding: 2px 10px; border-radius: 3px;');
     })();
 
     m = (name, color = '', blocks = []) => {
@@ -106,7 +87,7 @@ class CustomConsole {
         if (!color) color = this.stringToColour(name);
         if (color[0] === '#') fontColor = this.getColorByBgColor(color);
         const style = `background-color: ${color}; color: ${fontColor}; padding: 2px 10px; border-radius: 3px; margin-left: -5px; border-left: 1px solid white;`;
-        blocks.push({ name, style, });
+        blocks.push({ name, style });
 
         const temp = {};
         temp.m = (name2, color2 = '') => {
@@ -139,15 +120,15 @@ class CustomConsole {
         let colour = '#';
         for (let i = 0; i < 3; i++) {
             const value = (hash >> (i * 8)) & 0xff;
-            colour += value.toString(16).padStart(2, '0')
+            colour += value.toString(16).padStart(2, '0');
         }
         return colour;
-    };
+    }
 
     // https://stackoverflow.com/questions/64600665/javascript-is-there-a-way-for-a-point-to-see-the-background-color
     getColorByBgColor(bgColor) {
         return parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2 ? '#000' : '#fff';
-    };
+    }
 }
 
 // Load Settings
