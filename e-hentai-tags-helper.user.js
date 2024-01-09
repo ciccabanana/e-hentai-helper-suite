@@ -30,38 +30,38 @@ const defaultSettings = {
     dropdownPosition: 'all',
     style: {
         base: {
-            female: "#F75F57",
+            female: '#F75F57',
             male: '#435BD5',
-            language: "#10A911",
-            cosplayer: "#902BDC",
-            parody: "#902BDC",
-            character: "#D973D2",
-            group: "#F2A019",
-            artist: "#D2D204",
-            mixed: "#ab9f60", //  #3cd230 or #38d42f
-            other: "#808080",
-            reclass: "#808080",
-            temp: "#808080",
-            default: "#808080",
+            language: '#10A911',
+            cosplayer: '#902BDC',
+            parody: '#902BDC',
+            character: '#D973D2',
+            group: '#F2A019',
+            artist: '#D2D204',
+            mixed: '#ab9f60', //  #3cd230 or #38d42f
+            other: '#808080',
+            reclass: '#808080',
+            temp: '#808080',
+            default: '#808080',
             // NON-H => #0cb8ce / 0cb9cf / #0cbad0
         },
         exhentai: {
-            female: "#9E2720",      // (Red) (Doujinshi)
-            male: "#325CA2",        // (Blue) (Image Set)
-            language: "#6A936D",    // (Green) (Game CG)
-            cosplayer: "#6A32A2",   // (Purple ) (Cosplay)
-            parody: "#6A32A2",      // (Purple ) (Cosplay)
-            character: "#A23282",   // (Orchid) (Asian)
-            group: "#DB6C24",       // (Oragne) (Manga)
-            artist: "#D38F1D",      // (YelloW) (Artistig CG)
-            mixed: "#AB9F60",       // Teak (Western)
-            other: "#777777",       // (Gray) (Misc)
-            reclass: "#777777",     // (Gray) (Misc)
-            temp: "#777777",        // (Gray) (Misc)
-            default: "#777777",     // (Gray) (Misc)
-            // Non-H => 
-        }
-    }
+            female: '#9E2720', // (Red) (Doujinshi)
+            male: '#325CA2', // (Blue) (Image Set)
+            language: '#6A936D', // (Green) (Game CG)
+            cosplayer: '#6A32A2', // (Purple ) (Cosplay)
+            parody: '#6A32A2', // (Purple ) (Cosplay)
+            character: '#A23282', // (Orchid) (Asian)
+            group: '#DB6C24', // (Oragne) (Manga)
+            artist: '#D38F1D', // (YelloW) (Artistig CG)
+            mixed: '#AB9F60', // Teak (Western)
+            other: '#777777', // (Gray) (Misc)
+            reclass: '#777777', // (Gray) (Misc)
+            temp: '#777777', // (Gray) (Misc)
+            default: '#777777', // (Gray) (Misc)
+            // Non-H =>
+        },
+    },
 };
 
 // Class wrapper for custom console
@@ -94,7 +94,7 @@ class CustomConsole {
             return this.m(name2, color2, [...blocks]);
         };
         const moduleText = blocks.reduce((sum, el) => `${sum}%c${el.name}`, '');
-        const moduleStyle = blocks.map(el => el.style);
+        const moduleStyle = blocks.map((el) => el.style);
         temp.log = (() => {
             return Function.prototype.bind.call(console.log, console, `%cTAC ${moduleText}`, 'background-color: #2e51a2; color: white; padding: 2px 10px; border-radius: 3px;', ...moduleStyle);
         })();
@@ -147,7 +147,7 @@ if (userSettings.version === undefined || userSettings.version < defaultSettings
          * @param  {Object} obj The object
          * @return {String}     The object type
          */
-        const getType = obj => {
+        const getType = (obj) => {
             return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
         };
 
@@ -205,8 +205,7 @@ if (userSettings.version === undefined || userSettings.version < defaultSettings
     userSettings = newSettings;
 }
 
-if (userSettings.debugConsole)
-    console.time('[Tags Auto Complete]: Loading time');
+if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time');
 
 (async function () {
     'use strict';
@@ -227,25 +226,25 @@ if (userSettings.debugConsole)
                         <legend>Settings</legend>
                         <div>
                             <label>
-                                <input type="checkbox" class="tacCheck" id="dbConsole" ${(userSettings.debugConsole ? 'checked' : '')}>Debug console
+                                <input type="checkbox" class="tacCheck" id="dbConsole" ${userSettings.debugConsole ? 'checked' : ''}>Debug console
                             </label>
                             <span>: Print on console all the event for debug purpose</span>
                         </div>
                         <div>
                             <label>
-                                <input type="checkbox" class="tacCheck" id="hideOriginal" ${(userSettings.hideOriginal ? 'checked' : '')}>Original Search Bar
+                                <input type="checkbox" class="tacCheck" id="hideOriginal" ${userSettings.hideOriginal ? 'checked' : ''}>Original Search Bar
                             </label>
                             <span>: Hide Original seach bar</span>
                         </div>
                         <div>
                             <label>
-                                <input type="checkbox" class="tacCheck" id="dbText" ${(userSettings.debugText ? 'checked' : '')}>Tagify Text Area
+                                <input type="checkbox" class="tacCheck" id="dbText" ${userSettings.debugText ? 'checked' : ''}>Tagify Text Area
                             </label>
                             <span>: Text area used by tagify <b>⚠ Don't edit the content of the Text area ⚠ Only for debug</b></span>
                         </div>
                         <div>
                             <label>
-                                <input type="checkbox" class="tacCheck" id="editAllTags" ${(userSettings.editableTag ? 'checked' : '')}>All Tags editable
+                                <input type="checkbox" class="tacCheck" id="editAllTags" ${userSettings.editableTag ? 'checked' : ''}>All Tags editable
                             </label>
                             <span>: Allow to edit all the tag, not only the plain text tag <b>⚠ Comingsoon</b><p style="display: inline; font-size: xx-small;"> (maybe...)</p></span>
                         </div>
@@ -383,87 +382,85 @@ if (userSettings.debugConsole)
         `);
         $('body').append(container);
         $('body').addClass('noscroll');
-        $('#tac-settings-close').click(e => {
+        $('#tac-settings-close').click((e) => {
             $('.tac-overlay').remove();
             $('body').removeClass('noscroll');
         });
-        $('body').click(e => {
-            if (e.target.className == "tac-overlay") { // Exit if settings menu isn't clicked
+        $('body').click((e) => {
+            if (e.target.className == 'tac-overlay') {
+                // Exit if settings menu isn't clicked
                 $('.tac-overlay').remove();
             }
             if (!$('.tac-overlay').length) $('body').removeClass('noscroll');
         });
-        $('.tacColorPiker').on("change", e => {
+        $('.tacColorPiker').on('change', (e) => {
             document.getElementById('hex' + e.target.id.slice(3)).value = e.target.value.slice(1);
             $('#setNotice').text('Applied Settings Will Take Effect On Reload');
             reload = 1;
         });
-        $('.tacColorText').on("change", e => {
+        $('.tacColorText').on('change', (e) => {
             if (/[0-9A-Fa-f]{6}/.test(e.target.value)) {
                 document.getElementById('tcp' + e.target.id.slice(3)).value = '#' + e.target.value;
-            }
-            else {
+            } else {
                 e.target.value = document.getElementById('tcp' + e.target.id.slice(3)).value.slice(1);
             }
             $('#setNotice').text('Applied Settings Will Take Effect On Reload');
             reload = 1;
         });
-        $('.tacCheck').on("change", e => {            
+        $('.tacCheck').on('change', (e) => {
             $('#setNotice').text('Applied Settings Will Take Effect On Reload');
             reload = 1;
         });
-        $('#tac-apply').click(e => {
-            userSettings.debugConsole = $("#dbConsole").is(":checked");
-            userSettings.hideOriginal = $("#hideOriginal").is(":checked");
-            userSettings.debugText = $("#dbText").is(":checked");
-            userSettings.editableTag = $("#editAllTags").is(":checked");
+        $('#tac-apply').click((e) => {
+            userSettings.debugConsole = $('#dbConsole').is(':checked');
+            userSettings.hideOriginal = $('#hideOriginal').is(':checked');
+            userSettings.debugText = $('#dbText').is(':checked');
+            userSettings.editableTag = $('#editAllTags').is(':checked');
             userSettings.dropdownPosition = $('input[name="drdpos"]:checked').val();
 
-            sadpanda.female = $("#tcpfemale").val();
-            sadpanda.male = $("#tcpmale").val();
-            sadpanda.language = $("#tcplanguage").val();
-            sadpanda.cosplayer = $("#tcpcosplayer").val();
-            sadpanda.parody = $("#tcpparody").val();
-            sadpanda.character = $("#tcpcharacter").val();
-            sadpanda.group = $("#tcpgroup").val();
-            sadpanda.artist = $("#tcpartist").val();
-            sadpanda.mixed = $("#tcpmixed").val();
-            sadpanda.other = $("#tcpother").val();
-            sadpanda.reclass = $("#tcpreclass").val();
-            sadpanda.temp = $("#tcptemp").val();
-            sadpanda.default = $("#tcpdefault").val();
+            sadpanda.female = $('#tcpfemale').val();
+            sadpanda.male = $('#tcpmale').val();
+            sadpanda.language = $('#tcplanguage').val();
+            sadpanda.cosplayer = $('#tcpcosplayer').val();
+            sadpanda.parody = $('#tcpparody').val();
+            sadpanda.character = $('#tcpcharacter').val();
+            sadpanda.group = $('#tcpgroup').val();
+            sadpanda.artist = $('#tcpartist').val();
+            sadpanda.mixed = $('#tcpmixed').val();
+            sadpanda.other = $('#tcpother').val();
+            sadpanda.reclass = $('#tcpreclass').val();
+            sadpanda.temp = $('#tcptemp').val();
+            sadpanda.default = $('#tcpdefault').val();
 
             localStorage.setItem('tac-settings', JSON.stringify(userSettings));
         });
-        $('#tagcssReset').click(e => {
+        $('#tagcssReset').click((e) => {
             // reset variable
-            if (location.hostname == "e-hentai.org") {
-                userSettings.style.base = { ...defaultSettings.style.base }
+            if (location.hostname == 'e-hentai.org') {
+                userSettings.style.base = { ...defaultSettings.style.base };
                 sadpanda = userSettings.style.base;
-            }
-            else {
-                userSettings.style.exhentai = { ...defaultSettings.style.exhentai }
+            } else {
+                userSettings.style.exhentai = { ...defaultSettings.style.exhentai };
                 sadpanda = userSettings.style.exhentai;
             }
             // reset the display color
-            $("#tcpfemale").val(sadpanda.female).trigger('change');
-            $("#tcpmale").val(sadpanda.male).trigger('change');
-            $("#tcplanguage").val(sadpanda.language).trigger('change');
-            $("#tcpcosplayer").val(sadpanda.cosplayer).trigger('change');
-            $("#tcpparody").val(sadpanda.parody).trigger('change');
-            $("#tcpcharacter").val(sadpanda.character).trigger('change');
-            $("#tcpgroup").val(sadpanda.group).trigger('change');
-            $("#tcpartist").val(sadpanda.artist).trigger('change');
-            $("#tcpmixed").val(sadpanda.mixed).trigger('change');
-            $("#tcpother").val(sadpanda.other).trigger('change');
-            $("#tcpreclass").val(sadpanda.reclass).trigger('change');
-            $("#tcptemp").val(sadpanda.temp).trigger('change');
-            $("#tcpdefault").val(sadpanda.default).trigger('change');
+            $('#tcpfemale').val(sadpanda.female).trigger('change');
+            $('#tcpmale').val(sadpanda.male).trigger('change');
+            $('#tcplanguage').val(sadpanda.language).trigger('change');
+            $('#tcpcosplayer').val(sadpanda.cosplayer).trigger('change');
+            $('#tcpparody').val(sadpanda.parody).trigger('change');
+            $('#tcpcharacter').val(sadpanda.character).trigger('change');
+            $('#tcpgroup').val(sadpanda.group).trigger('change');
+            $('#tcpartist').val(sadpanda.artist).trigger('change');
+            $('#tcpmixed').val(sadpanda.mixed).trigger('change');
+            $('#tcpother').val(sadpanda.other).trigger('change');
+            $('#tcpreclass').val(sadpanda.reclass).trigger('change');
+            $('#tcptemp').val(sadpanda.temp).trigger('change');
+            $('#tcpdefault').val(sadpanda.default).trigger('change');
             $('#setNotice').text('Applied Settings Will Take Effect On Reload');
             reload = 1;
-
         });
-    }
+    };
 
     //#region Support funtion
 
@@ -473,8 +470,7 @@ if (userSettings.debugConsole)
      * @returns {string}
      */
     const addStyle = async (CSS) => {
-        let head,
-            style;
+        let head, style;
         head = document.getElementsByTagName('head')[0];
         //if (!head) { return; }
         style = document.createElement('style');
@@ -485,7 +481,7 @@ if (userSettings.debugConsole)
 
     /**
      * Return a Promise of the substitution
-     * @param {string} imput_string 
+     * @param {string} imput_string
      * @returns {Promise}
      */
     const regex_replace = (imput_string) => {
@@ -493,10 +489,25 @@ if (userSettings.debugConsole)
             // ^(x|mix|mis|co|t|f|m|r|l|p|c|g|a|o).*:
 
             // Regexp take from /mytags page
-            var text = imput_string.replace(/["\']/g, "");
-            text = text.match(/^(x|mix).*:/) ? text.replace(/^(x|mix).*:/, "mixed:") : text.match(/^(mis).*:/) ? text.replace(/^(mis).*:/, "temp:") : text.match(/^(co).*:/) ? text.replace(/^(co).*:/, "cosplayer:") : text.replace(/^t.*:/, "temp:").replace(/^f.*:/, "female:").replace(/^m.*:/, "male:").replace(/^r.*:/, "reclass:").replace(/^l.*:/, "language:").replace(/^p.*:/, "parody:").replace(/^c.*:/, "character:").replace(/^g.*:/, "group:").replace(/^a.*:/, "artist:").replace(/^o.*:/, "other:");
-            if (2 > text.replace(/^.*:/, "").length)
-                reject("Length < 2");
+            var text = imput_string.replace(/["\']/g, '');
+            text = text.match(/^(x|mix).*:/)
+                ? text.replace(/^(x|mix).*:/, 'mixed:')
+                : text.match(/^(mis).*:/)
+                ? text.replace(/^(mis).*:/, 'temp:')
+                : text.match(/^(co).*:/)
+                ? text.replace(/^(co).*:/, 'cosplayer:')
+                : text
+                      .replace(/^t.*:/, 'temp:')
+                      .replace(/^f.*:/, 'female:')
+                      .replace(/^m.*:/, 'male:')
+                      .replace(/^r.*:/, 'reclass:')
+                      .replace(/^l.*:/, 'language:')
+                      .replace(/^p.*:/, 'parody:')
+                      .replace(/^c.*:/, 'character:')
+                      .replace(/^g.*:/, 'group:')
+                      .replace(/^a.*:/, 'artist:')
+                      .replace(/^o.*:/, 'other:');
+            if (2 > text.replace(/^.*:/, '').length) reject('Length < 2');
             else {
                 resolve(text);
             }
@@ -510,8 +521,7 @@ if (userSettings.debugConsole)
      * @param {Object} [body=null] - Request body
      * @returns Promise
      */
-    const makeXMLRequest = (url, method = "GET", body = null) => {
-
+    const makeXMLRequest = (url, method = 'GET', body = null) => {
         clearTimeout(typingDebounce); // abort last request
         var request = new XMLHttpRequest();
 
@@ -521,25 +531,23 @@ if (userSettings.debugConsole)
                 // Setup our listener to process compeleted requests
                 request.onreadystatechange = function () {
                     // Only run if the request is complete
-                    if (request.readyState !== 4)
-                        return;
+                    if (request.readyState !== 4) return;
                     // Process the response
                     if (request.status >= 200 && request.status < 300) {
-                        // If successful                        
+                        // If successful
                         resolve(request);
                     } else {
                         // If failed
                         reject({
                             status: request.status,
-                            statusText: request.statusText
+                            statusText: request.statusText,
                         });
                     }
-
                 };
 
                 // Setup our HTTP request
                 request.open(method, url, true);
-                request.setRequestHeader("Content-Type", "application/json");
+                request.setRequestHeader('Content-Type', 'application/json');
                 request.withCredentials = true;
 
                 // Send the request
@@ -550,32 +558,32 @@ if (userSettings.debugConsole)
 
     /**
      * Get the resource and handle it with the Callback
-     * @param {string} resurce 
-     * @param {addStyle} callback 
+     * @param {string} resurce
+     * @param {addStyle} callback
      */
     const getResourceText = async (resurce, callback) => {
-        if (typeof (GM_getResourceText) !== 'undefined') {
+        if (typeof GM_getResourceText !== 'undefined') {
             // Tampermonkey and Violentmonkey
-            callback(GM_getResourceText(resurce))
-        } else if (typeof (GM.getResourceUrl) !== 'undefined') {
+            callback(GM_getResourceText(resurce));
+        } else if (typeof GM.getResourceUrl !== 'undefined') {
             // Greasemonkey and Tampermonkey (If TM compatibility is on)
-            GM.getResourceUrl(resurce).then(function (blobURL) {
-                makeXMLRequest(blobURL).then(function (result) {
+            GM.getResourceUrl(resurce).then((blobURL) => {
+                makeXMLRequest(blobURL).then((result) => {
                     callback(result.responseText);
                 }).catch((reason) => {
-                    mConsole.m("getResource").error('Reasion: ', reason);
+                    mConsole.m('getResource').error('Reasion: ', reason);
                 });
             }).catch((reason) => {
-                mConsole.m("getResource").error('Reasion: ', reason);
+                mConsole.m('getResource').error('Reasion: ', reason);
             });
         }
     };
 
     /**
      * async wait for the element
-     * @param {string} selectors - string containing one selectors to match 
+     * @param {string} selectors - string containing one selectors to match
      * @param {HTML DOM} [rootElement=document.documentElement]
-     * @returns 
+     * @returns
      */
     const waitForElement = (selector, rootElement = document.documentElement) => {
         // REF: https://stackoverflow.com/questions/66795663/document-queryselector-inside-mutationobserver-good-or-bad-practice
@@ -605,7 +613,7 @@ if (userSettings.debugConsole)
     //#region Tagify Events
 
     const populatelist = (value) => {
-        tagify.whitelist = null // Reset the whitelist
+        tagify.whitelist = null; // Reset the whitelist
 
         let clear_value = value;
         let state = null;
@@ -627,182 +635,176 @@ if (userSettings.debugConsole)
         // TODO
 
         regex_replace(clear_value).then((pre_elab_result) => {
-            // show the loader animation
-            tagify.loading(true);
+                // show the loader animation
+                tagify.loading(true);
 
-            makeXMLRequest(api_url, "POST", JSON.stringify({
-                method: "tagsuggest",
-                text: pre_elab_result
-            })).then((result) => {
+                makeXMLRequest(api_url, 'POST', JSON.stringify({
+                        method: 'tagsuggest',
+                        text: pre_elab_result
+                    })).then((result) => {
 
-                // Prepare the prefix for the key
-                let prefix = state || 0 ? state > 0 ? `~` : `-` : "";
+                        // Prepare the prefix for the key
+                        let prefix = state || 0 ? (state > 0 ? `~` : `-`) : '';
 
-                result = JSON.parse(result.responseText);
-                var p = new RegExp("(^| |:)" + pre_elab_result, "ig");
-                var a = Object.values(result.tags).map((key) => {
-                    return {
-                        key: key.tn.indexOf(" ") != -1 ? prefix + key.ns + ":\"" + key.tn + "$\"" : prefix + key.ns + ":" + key.tn + "$",
-                        value: (key.ns + ":" + key.tn),
-                        editable: false,
-                        highlights: (key.ns + ":" + key.tn).match(p) ? (key.ns + ":" + key.tn).replace(p, "<strong>$&</strong>") : key.ns + ":" + key.tn,
-                        ...(state) && { state: state }
-                    };
-                });
-                // replace tagify "whitelist" array values with new values
-                // and add back the ones already choses as Tags
-                tagify.settings.whitelist.push(...a, ...tagify.value)
+                        result = JSON.parse(result.responseText);
+                        var p = new RegExp('(^| |:)' + pre_elab_result, 'ig');
+                        var a = Object.values(result.tags).map((key) => {
+                            return {
+                                key: key.tn.indexOf(' ') != -1 ? prefix + key.ns + ':"' + key.tn + '$"' : prefix + key.ns + ':' + key.tn + '$',
+                                value: key.ns + ':' + key.tn,
+                                editable: false,
+                                highlights: (key.ns + ':' + key.tn).match(p) ? (key.ns + ':' + key.tn).replace(p, '<strong>$&</strong>') : key.ns + ':' + key.tn,
+                                ...(state && { state: state }),
+                            };
+                        });
+                        // replace tagify "whitelist" array values with new values
+                        // and add back the ones already choses as Tags
+                        tagify.settings.whitelist.push(...a, ...tagify.value);
 
-                // Render the suggestions dropdown.
-                // tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
-                // tagify.loading(false).dropdown.show(); // BUG? If show has no param there is some case that the dropdown don't show 
-                // IF xx:tag => take only the tag
-                // If xx:tag => undefined take pre_elab_result
-                tagify.loading(false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result);
-
-            }).catch((reason) => {
-                mConsole.m("Input").error('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
+                        // Render the suggestions dropdown.
+                        // tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
+                        // tagify.loading(false).dropdown.show(); // BUG? If show has no param there is some case that the dropdown don't show
+                        // IF xx:tag => take only the tag
+                        // If xx:tag => undefined take pre_elab_result
+                        tagify.loading(false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result);
+                    })
+                    .catch((reason) => {
+                        mConsole.m('Input').error('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
+                    });
+            })
+            .catch((reason) => {
+                if (userSettings.debugConsole) mConsole.m('Input').debug('Pre-request elab failed. Reasion: ', reason);
             });
-        }).catch((reason) => {
-            if (userSettings.debugConsole)
-                mConsole.m("Input").debug('Pre-request elab failed. Reasion: ', reason);
-        });
-    }
+    };
 
     const onAddTag = (e) => {
-        if (userSettings.debugConsole)
-            mConsole.m("Tag Add").debug(e.detail.data);
+        if (userSettings.debugConsole) mConsole.m('Tag Add').debug(e.detail.data);
         tagify.whitelist = null;
     };
 
     const onRemoveTag = (e) => {
-        if (userSettings.debugConsole)
-            mConsole.m("Tag Remove").debug(e.detail.data);
+        if (userSettings.debugConsole) mConsole.m('Tag Remove').debug(e.detail.data);
     };
 
     const onDropdownSelect = (e) => {
-        if (userSettings.debugConsole)
-            mConsole.m("Dropdown Select").debug(e.detail);
+        if (userSettings.debugConsole) mConsole.m('Dropdown Select').debug(e.detail);
     };
 
     const onKeyDown = (e) => {
-        if (e.detail.event.keyCode == 13 &&
+        if (
+            e.detail.event.keyCode == 13 &&
             !tagify.state.inputText && // assuming user is not in the middle oy adding a tag
             !tagify.state.editing // user not editing a tag
         ) {
             e.preventDefault();
-            var selector = "#searchbox > form";
-            if (location.pathname == "/favorites.php") {
-                selector = "body > div.ido > div:nth-child(3) > form";
+            var selector = '#searchbox > form';
+            if (location.pathname == '/favorites.php') {
+                selector = 'body > div.ido > div:nth-child(3) > form';
             }
             $(selector).submit();
         }
-        if (userSettings.debugConsole)
-            mConsole.m("Key Down").debug(e.type, e.detail);
+        if (userSettings.debugConsole) mConsole.m('Key Down').debug(e.type, e.detail);
     };
 
     const tagAnalyzer = (tagData) => {
-        if (userSettings.debugConsole)
-            mConsole.m("Tag-Analyzer").debug(tagData);
+        if (userSettings.debugConsole) mConsole.m('Tag-Analyzer').debug(tagData);
         // Analize the tag before add it to the tagbar
 
         // If key don't exist add it to tagData
         tagData.key = tagData.key ?? tagData.value;
 
         // If i'm editing a tag i need to update the key with the new value
-        tagData.key = tagify.state.editing ? tagData.value : tagData.key
+        tagData.key = tagify.state.editing ? tagData.value : tagData.key;
 
         // Analyze the key if has 'Exclusion' or 'Or' prefix
         // If the prefix exist remove it from value
         switch (tagData.value.charAt(0)) {
             case '-':
-                tagData.state = -1
-                tagData.value = tagData.value.slice(1)
+                tagData.state = -1;
+                tagData.value = tagData.value.slice(1);
                 break;
             case '~':
-                tagData.state = 1
-                tagData.value = tagData.value.slice(1)
+                tagData.state = 1;
+                tagData.value = tagData.value.slice(1);
                 break;
         }
 
-        // set bakground color by category 
-        var category = tagData.value.split(":")[0];
+        // set bakground color by category
+        var category = tagData.value.split(':')[0];
         switch (category) {
             case 'female':
-                tagData.style = "--tag-bg:" + sadpanda.female;
+                tagData.style = '--tag-bg:' + sadpanda.female;
                 break;
             case 'male':
-                tagData.style = "--tag-bg:" + sadpanda.male;
+                tagData.style = '--tag-bg:' + sadpanda.male;
                 break;
             case 'language':
-                tagData.style = "--tag-bg:" + sadpanda.language;
+                tagData.style = '--tag-bg:' + sadpanda.language;
                 break;
             case 'cosplayer':
-                tagData.style = "--tag-bg:" + sadpanda.cosplayer;
+                tagData.style = '--tag-bg:' + sadpanda.cosplayer;
                 break;
             case 'parody':
-                tagData.style = "--tag-bg:" + sadpanda.parody;
+                tagData.style = '--tag-bg:' + sadpanda.parody;
                 break;
             case 'character':
-                tagData.style = "--tag-bg:" + sadpanda.character;
+                tagData.style = '--tag-bg:' + sadpanda.character;
                 break;
             case 'group':
-                tagData.style = "--tag-bg:" + sadpanda.group;
+                tagData.style = '--tag-bg:' + sadpanda.group;
                 break;
             case 'artist':
-                tagData.style = "--tag-bg:" + sadpanda.artist;
+                tagData.style = '--tag-bg:' + sadpanda.artist;
                 break;
             case 'mixed':
-                tagData.style = "--tag-bg:" + sadpanda.mixed;
+                tagData.style = '--tag-bg:' + sadpanda.mixed;
                 break;
             case 'other':
-                tagData.style = "--tag-bg:" + sadpanda.other;
+                tagData.style = '--tag-bg:' + sadpanda.other;
                 break;
             case 'reclass':
-                tagData.style = "--tag-bg:" + sadpanda.reclass;
+                tagData.style = '--tag-bg:' + sadpanda.reclass;
                 break;
             case 'temp':
-                tagData.style = "--tag-bg:" + sadpanda.temp;
+                tagData.style = '--tag-bg:' + sadpanda.temp;
                 break;
             default:
-                tagData.style = "--tag-bg:" + sadpanda.default;
+                tagData.style = '--tag-bg:' + sadpanda.default;
                 break;
         }
     };
 
     // on character(s) added/removed (user is typing/deleting)
     const onInput = (e) => {
-        if (userSettings.debugConsole)
-            mConsole.m("Input").debug(e.detail);
+        if (userSettings.debugConsole) mConsole.m('Input').debug(e.detail);
 
         populatelist(e.detail.value);
     };
 
     const onChange = (e) => {
         // outputs a String
-        if (userSettings.debugConsole)
-            mConsole.m("Change").debug(e.detail);
-        var text = "";
+        if (userSettings.debugConsole) mConsole.m('Change').debug(e.detail);
+        var text = '';
         if (e.detail.value) {
             var list = JSON.parse(e.detail.value);
-            list = list.map(x => x.key || x.value); // extract key is exist otherwise value
-            text = list.join(" ");
+            list = list.map((x) => x.key || x.value); // extract key is exist otherwise value
+            text = list.join(' ');
         }
         $('[name="f_search"]')[0].value = text;
     };
 
     const onEditStart = (e) => {
-        if (userSettings.debugConsole)
-            mConsole.m("edit:start").debug(e.detail);
+        if (userSettings.debugConsole) mConsole.m('edit:start').debug(e.detail);
         const { tag: tagElm, data: tagData } = e.detail;
-        tagify.setTagTextNode(tagElm, `${tagData.key}`)
-    }
+        tagify.setTagTextNode(tagElm, `${tagData.key}`);
+    };
 
     const onClick = (e) => {
         // Switch between Normal -> Exclusion -> Or tags
         const { tag: tagElm, data: tagData } = e.detail;
-        if (tagify.state.editing) // If editing return
-            return
+        if (tagify.state.editing)
+            // If editing return
+            return;
         // Delay needed to distinguish between regular click and double-click.
         // This allows enough time for a possible double-click, and noly fires if such
         // did not occur.
@@ -812,18 +814,18 @@ if (userSettings.debugConsole)
                 case -1:
                     tagData.state = 1;
                     tagData.key = tagData.key.slice(1);
-                    tagData.key = "~" + tagData.key;
-                    mConsole.m("click").debug("Transform to Or");
+                    tagData.key = '~' + tagData.key;
+                    mConsole.m('click').debug('Transform to Or');
                     break;
                 case 0:
-                    tagData.state = -1
-                    tagData.key = "-" + tagData.key;
-                    mConsole.m("click").debug("Transform to Exclusion");
+                    tagData.state = -1;
+                    tagData.key = '-' + tagData.key;
+                    mConsole.m('click').debug('Transform to Exclusion');
                     break;
                 case 1:
                     tagData.state = 0;
                     tagData.key = tagData.key.slice(1);
-                    mConsole.m("click").debug("Transform to Normal");
+                    mConsole.m('click').debug('Transform to Normal');
                     break;
             }
             tagify.replaceTag(tagElm, tagData);
@@ -845,8 +847,8 @@ if (userSettings.debugConsole)
     let CSSxSite = null;
 
     // Print site details
-    mConsole.log("Site api: ", location.hostname);
-    mConsole.log("Location: ", location.pathname);
+    mConsole.log('Site api: ', location.hostname);
+    mConsole.log('Location: ', location.pathname);
 
     if (location.hostname == 'e-hentai.org') {
         api_url = 'https://api.e-hentai.org/api.php';
@@ -891,25 +893,27 @@ if (userSettings.debugConsole)
     // #region element creation
 
     // Create base container
-    var container = document.createElement("DIV");
-    container.setAttribute("class", "tagcomplete");
-    container.setAttribute("id", "c_aut_comp");
-    container.style.position = "relative";
+    var container = document.createElement('DIV');
+    container.setAttribute('class', 'tagcomplete');
+    container.setAttribute('id', 'c_aut_comp');
+    container.style.position = 'relative';
 
     // Create input text
     // var tag_bar = document.createElement("input");
     // tag_bar.setAttribute("type", "text");
-    var tag_bar = document.createElement("textarea");
-    tag_bar.style.display = userSettings.debugText ? 'block' : 'none'
-    tag_bar.setAttribute("id", "tag_name_bar");
-    tag_bar.setAttribute("name", "tag_name_bar"); // Remove this for disable the URL param
-    tag_bar.setAttribute("placeholder", "Insert tags ");
-    tag_bar.setAttribute("autofocus", '');
+    var tag_bar = document.createElement('textarea');
+    tag_bar.style.display = userSettings.debugText ? 'block' : 'none';
+    tag_bar.setAttribute('id', 'tag_name_bar');
+    tag_bar.setAttribute('name', 'tag_name_bar'); // Remove this for disable the URL param
+    tag_bar.setAttribute('placeholder', 'Insert tags ');
+    tag_bar.setAttribute('autofocus', '');
 
     // Create settings container
-    var settings = document.createElement("DIV");
-    settings.setAttribute("class", "settings");
-    settings.onclick = (e) => { open_settinga(); };
+    var settings = document.createElement('DIV');
+    settings.setAttribute('class', 'settings');
+    settings.onclick = (e) => {
+        open_settinga();
+    };
 
     // Create svg icon
     const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -924,19 +928,19 @@ if (userSettings.debugConsole)
 
     container.appendChild(tag_bar); // Append tab_ga inside container
 
-    container.appendChild(settings); // Append settings inside container 
+    container.appendChild(settings); // Append settings inside container
 
     // #endregion
 
-    let selector = location.pathname == "/favorites.php" ? "body > div.ido > div:nth-child(3) > form > div" : "#searchbox > form > div:nth-child(3)";
+    let selector = location.pathname == '/favorites.php' ? 'body > div.ido > div:nth-child(3) > form > div' : '#searchbox > form > div:nth-child(3)';
 
-    mConsole.log("Preload complete. Waintg for website...");
+    mConsole.log('Preload complete. Waintg for website...');
     // Wait the element before assembly all the things
     await waitForElement(selector);
-    mConsole.log("Website loded");
+    mConsole.log('Website loded');
 
     // Append all the style at the head
-    getResourceText("TagifyCSS", addStyle);
+    getResourceText('TagifyCSS', addStyle);
     addStyle(CSSxSite);
 
     // Hide the original search bar
@@ -945,19 +949,19 @@ if (userSettings.debugConsole)
     $(selector).after(container);
 
     // Clone and append button "Clear Filter"
-    $(selector.concat(" > input[type=button]:nth-child(3)")).clone().insertAfter("#c_aut_comp");
+    $(selector.concat(' > input[type=button]:nth-child(3)')).clone().insertAfter('#c_aut_comp');
     // Clone and append button "Apply Filter"
-    $(selector.concat(" > input[type=submit]:nth-child(2)")).clone().insertAfter("#c_aut_comp");
+    $(selector.concat(' > input[type=submit]:nth-child(2)')).clone().insertAfter('#c_aut_comp');
 
     // Create tagify bar
     var tagify = new Tagify(tag_bar, {
         transformTag: tagAnalyzer,
         delimiters: null,
         // originalInputValueFormat: valuesArr => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable, ...(item.state != 0) && { state: item.state } }; })),
-        originalInputValueFormat: valuesArr => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable }; })),
+        originalInputValueFormat: (valuesArr) => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable }; })),
         editTags: {
             clicks: 2,
-            keepInvalid: false
+            keepInvalid: false,
         },
         dropdown: {
             enabled: 2, // suggest tags after a single character input
@@ -966,7 +970,7 @@ if (userSettings.debugConsole)
         },
         templates: {
             tag(tagData) {
-                return `<tag title='${tagData.key || tagData.value}' contenteditable='false' spellcheck="false" class='${this.settings.classNames.tag} ${tagData.class || ""}' ${this.getAttributes(tagData)}>
+                return `<tag title='${tagData.key || tagData.value}' contenteditable='false' spellcheck="false" class='${this.settings.classNames.tag} ${tagData.class || ''}' ${this.getAttributes(tagData)}>
                         <x title='' class='${this.settings.classNames.tagX}' role='button' aria-label='remove tag'></x>
                         <div>                           
                             <span class='${this.settings.classNames.tagText}'>${tagData.value}</span>
@@ -974,22 +978,22 @@ if (userSettings.debugConsole)
                     </tag>`;
             },
             dropdownItem(item) {
-                return `<div ${this.getAttributes(item)} class='${this.settings.classNames.dropdownItem} ${item.class ?? ""}' tabindex="0" role="option">
+                return `<div ${this.getAttributes(item)} class='${this.settings.classNames.dropdownItem} ${item.class ?? ''}' tabindex="0" role="option">
                         <span>${item.highlights}</span>
                     </div>`;
             },
             dropdownItemNoMatch(data) {
                 return `<div class='${tagify.settings.classNames.dropdownItem}' value="noMatch" tabindex="0" role="option">
                     No tag found for: <strong>${data.value}</strong>
-                </div>`
+                </div>`;
             },
-        }
+        },
     });
 
     // Get current search value
     const urlParams = new URLSearchParams(window.location.search);
-    let old_input = urlParams.get('tag_name_bar')
-    old_input = JSON.parse(old_input == "" ? null : old_input);
+    let old_input = urlParams.get('tag_name_bar');
+    old_input = JSON.parse(old_input == '' ? null : old_input);
     if (old_input == null) {
         // old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?)|((?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?)|([~-]?\"(?:[^\"]*)\")|([^\"\$ \n]+)/g);
         old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:\"?[^\$\"]*\$\"?)|(\"?[\w\s]*\$\"?)|([~-]?\"[^\"]*\")|([^\"\$ \n]+)/g);
@@ -998,7 +1002,7 @@ if (userSettings.debugConsole)
                 return {
                     key: item.match(/^.*:.*$/g) ? item : null,
                     value: item.match(/^.*:.*$/g) ? item.replace(/["\'\$]/g, '') : item.replace(/[\'\$]/g, ''), // Don't remove " if a specific request
-                    editable: item.match(/^.*:.*$/g) ? false : true
+                    editable: item.match(/^.*:.*$/g) ? false : true,
                 };
             });
         }
@@ -1019,6 +1023,4 @@ if (userSettings.debugConsole)
 
     // Your code here...
 })();
-if (userSettings.debugConsole)
-    console.timeEnd('[Tags Auto Complete]: Loading time');
-
+if (userSettings.debugConsole) console.timeEnd('[Tags Auto Complete]: Loading time');
