@@ -848,7 +848,6 @@ if (userSettings.debugConsole)
     mConsole.log("Site api: ", location.hostname);
     mConsole.log("Location: ", location.pathname);
 
-    if (location.hostname == "e-hentai.org") {
     if (location.hostname == 'e-hentai.org') {
         api_url = 'https://api.e-hentai.org/api.php';
         sadpanda = userSettings.style.base;
