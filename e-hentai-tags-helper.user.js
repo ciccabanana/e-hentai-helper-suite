@@ -134,15 +134,82 @@ class CustomConsole {
 // Load Settings
 var userSettings = localStorage.getItem('tac-settings') ? JSON.parse(localStorage.getItem('tac-settings')) : { ...defaultSettings };
 
+// Create custom mConsole
+var mConsole = new CustomConsole();
+
+// Ceck if Settings version undefined or if is older => if is update
+if (userSettings.version === undefined || userSettings.version < defaultSettings.version) {
+    mConsole.m('Settings').log('Updating the settings');
+
+    const updateObject = (obj1, obj2) => {
+        /**
+         * More accurately check the type of a JavaScript object
+         * @param  {Object} obj The object
+         * @return {String}     The object type
+         */
+        const getType = obj => {
+            return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+        };
+
+        const areObjects = () => {
+            let result = {};
+            // Check each item in the object
+            for (let key in obj1) {
+                if (obj1.hasOwnProperty(key)) {
+                    // If obj1 has the key
+                    if (!obj2.hasOwnProperty(key) || key == 'version') {
+                        /**
+                         * If the obj2 don't have the key => new settings => add in the result
+                         * The key is 'version' => update version value
+                         */
+                        result[key] = obj1[key];
+                    } else {
+                        // If obj2 has the key iterate
+                        result[key] = updateObject(obj1[key], obj2[key]);
+                    }
+                }
+                // Else If the obj1 don't has the key the settigs was removed
+            }
+            return result;
+        };
+
+        const areArrays = () => {
+            let result = {};
+            // Check each item in the array
+            for (let i = 0; i < obj1.length; i++) {
+                result[i] = updateObject(obj1[i], obj2[i]);
+            }
+            return result;
+        };
+
+        const arePrimatives = () => {
+            // If the element is a primitive return obj2
+            return obj2;
+        };
+
+        // Get the object type
+        let type = getType(obj1);
+
+        // If the two items are not the same type, return obj1
+        if (type !== getType(obj2)) return obj1;
+
+        if (type === 'object') return areObjects();
+        if (type === 'array') return areArrays();
+        return arePrimatives();
+    };
+    // Get updated settings
+    let newSettings = updateObject(defaultSettings, userSettings);
+    // Save the new settings in the storage
+    localStorage.setItem('tac-settings', JSON.stringify(newSettings));
+    // Set the new setting as curent settings
+    userSettings = newSettings;
+}
 
 if (userSettings.debugConsole)
     console.time('[Tags Auto Complete]: Loading time');
 
 (async function () {
     'use strict';
-
-    // Create custom mConsole
-    var mConsole = new CustomConsole();
 
     let open_settinga = async () => {
         var container = $(`
