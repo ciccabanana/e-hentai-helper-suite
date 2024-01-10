@@ -66,8 +66,8 @@ Collection of userscripts for a better navigation on e-hentai
 
 ### ToDo
 
-* [✔] Settings interface
-* [✔] Possibility of user to personalize tags color
+* [x] Settings interface
+* [x] Possibility of user to personalize tags color
 * [ ] Support for Qualifiers "tag:" / "weak:" / "title:" / "uploader:" / "uploaduid:" / "gid:" / "comment:" / "favnote:"
 * [ ] Compatibility to work in the insertion of new tags on the gallery page (Under evaluation)
 * [ ] ...
@@ -75,4 +75,3 @@ Collection of userscripts for a better navigation on e-hentai
 ## External Tools
 
 * [tagify](https://github.com/yairEO/tagify) (v 3.17.7)
-* [@saninn/logger](https://github.com/distante/saninn-logger)
