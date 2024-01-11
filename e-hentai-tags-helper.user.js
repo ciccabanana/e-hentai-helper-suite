@@ -490,24 +490,24 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
             // Regexp take from /mytags page
             var text = imput_string.replace(/["\']/g, '');
-            text = text.match(/^(x|mix).*:/)
-                ? text.replace(/^(x|mix).*:/, 'mixed:')
-                : text.match(/^(mis).*:/)
-                ? text.replace(/^(mis).*:/, 'temp:')
-                : text.match(/^(co).*:/)
-                ? text.replace(/^(co).*:/, 'cosplayer:')
+            text = text.match(/^(x|mix).*:/i)
+                ? text.replace(/^(x|mix).*:/i, 'mixed:')
+                : text.match(/^(mis).*:/i)
+                ? text.replace(/^(mis).*:/i, 'temp:')
+                : text.match(/^(co).*:/i)
+                ? text.replace(/^(co).*:/i, 'cosplayer:')
                 : text
-                      .replace(/^t.*:/, 'temp:')
-                      .replace(/^f.*:/, 'female:')
-                      .replace(/^m.*:/, 'male:')
-                      .replace(/^r.*:/, 'reclass:')
-                      .replace(/^l.*:/, 'language:')
-                      .replace(/^p.*:/, 'parody:')
-                      .replace(/^c.*:/, 'character:')
-                      .replace(/^g.*:/, 'group:')
-                      .replace(/^a.*:/, 'artist:')
-                      .replace(/^o.*:/, 'other:');
-            if (2 > text.replace(/^.*:/, '').length) reject('Length < 2');
+                      .replace(/^t.*:/i, 'temp:')
+                      .replace(/^f.*:/i, 'female:')
+                      .replace(/^m.*:/i, 'male:')
+                      .replace(/^r.*:/i, 'reclass:')
+                      .replace(/^l.*:/i, 'language:')
+                      .replace(/^p.*:/i, 'parody:')
+                      .replace(/^c.*:/i, 'character:')
+                      .replace(/^g.*:/i, 'group:')
+                      .replace(/^a.*:/i, 'artist:')
+                      .replace(/^o.*:/i, 'other:');
+            if (2 > text.replace(/^.*:/i, '').length) reject('Length < 2');
             else {
                 resolve(text);
             }
