@@ -772,8 +772,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         if (userSettings.debugConsole) mConsole.m('Key Down').debug(e.type, e.detail);
     };
 
-    const tagAnalyzer = (tagData) => {
-        if (userSettings.debugConsole) mConsole.m('Tag-Analyzer').debug(tagData);
+    const tagAnalyzer = (tagData, oldtagData) => {
+        if (userSettings.debugConsole) mConsole.m('Tag-Analyzer').debug(tagData, oldtagData);
         // Analize the tag before add it to the tagbar
 
         // If key don't exist add it to tagData
@@ -800,42 +800,55 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         switch (category) {
             case 'female':
                 tagData.style = '--tag-bg:' + sadpanda.female;
+                tagData.class = 'tac_female';
                 break;
             case 'male':
                 tagData.style = '--tag-bg:' + sadpanda.male;
+                tagData.class = 'tac_male';
                 break;
             case 'language':
                 tagData.style = '--tag-bg:' + sadpanda.language;
+                tagData.class = 'tac_language';
                 break;
             case 'cosplayer':
                 tagData.style = '--tag-bg:' + sadpanda.cosplayer;
+                tagData.class = 'tac_cosplayer';
                 break;
             case 'parody':
                 tagData.style = '--tag-bg:' + sadpanda.parody;
+                tagData.class = 'tac_parody';
                 break;
             case 'character':
                 tagData.style = '--tag-bg:' + sadpanda.character;
+                tagData.class = 'tac_character';
                 break;
             case 'group':
                 tagData.style = '--tag-bg:' + sadpanda.group;
+                tagData.class = 'tac_group';
                 break;
             case 'artist':
                 tagData.style = '--tag-bg:' + sadpanda.artist;
+                tagData.class = 'tac_artiste';
                 break;
             case 'mixed':
                 tagData.style = '--tag-bg:' + sadpanda.mixed;
+                tagData.class = 'tac_mixed';
                 break;
             case 'other':
                 tagData.style = '--tag-bg:' + sadpanda.other;
+                tagData.class = 'tac_other';
                 break;
             case 'reclass':
                 tagData.style = '--tag-bg:' + sadpanda.reclass;
+                tagData.class = 'tac_reclass';
                 break;
             case 'temp':
                 tagData.style = '--tag-bg:' + sadpanda.temp;
+                tagData.class = 'tac_temp';
                 break;
             default:
                 tagData.style = '--tag-bg:' + sadpanda.default;
+                tagData.class = 'tac_default';
                 break;
         }
     };
