@@ -23,10 +23,12 @@
 
 // Object that contain the default settings
 const defaultSettings = {
-    debugConsole: false,
-    hideOriginal: true,
-    debugText: false,
-    editableTag: false,
+    debugConsole: true, // True => Print on console all the events 
+    originalBar: false, // True => Show the original search bar
+    debugText: false, // True => Show the Tagify Text Area
+    editableTag: false, // True => All tag are editable
+    showNoMatch: false, // True => Enable the footer "No tag Found for: xxxxx"
+    urlParameter: false, // True => Enale the this pluggin url parameter
     dropdownPosition: 'all',
     style: {
         base: {
@@ -62,6 +64,7 @@ const defaultSettings = {
             // Non-H =>
         },
     },
+    version: 2,
 };
 
 // Class wrapper for custom console
@@ -216,7 +219,6 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             <div class="tac-settings">
                 <nav id="tac-topNav">
                     <span id="tac-home" style="float: left; border: none; padding: 0 0 0 15px;">Tags auto complete settings</span>
-                    <span id="setNotice" style="width: 100%; margin-left: 8px; font-weight: lighter; opacity: 0.5; -webkit-opacity: 0.5; text-align: center; position: absolute; left: 0;">${(reload ? 'Applied Settings Will Take Effect On Reload' : '')}</span>
                     <div>
                         <a id="tac-settings-close">&#128939</a>
                     </div>
@@ -228,13 +230,13 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                             <label>
                                 <input type="checkbox" class="tacCheck" id="dbConsole" ${userSettings.debugConsole ? 'checked' : ''}>Debug console
                             </label>
-                            <span>: Print on console all the event for debug purpose</span>
+                            <span>: Print on the console all the event. For debug purpose</span>
                         </div>
                         <div>
                             <label>
-                                <input type="checkbox" class="tacCheck" id="hideOriginal" ${userSettings.hideOriginal ? 'checked' : ''}>Original Search Bar
+                                <input type="checkbox" class="tacCheck" id="originalBar" ${userSettings.originalBar ? 'checked' : ''}>Original Search Bar
                             </label>
-                            <span>: Hide Original seach bar</span>
+                            <span>: Show the Original search bar</span>
                         </div>
                         <div>
                             <label>
@@ -246,7 +248,19 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                             <label>
                                 <input type="checkbox" class="tacCheck" id="editAllTags" ${userSettings.editableTag ? 'checked' : ''}>All Tags editable
                             </label>
-                            <span>: Allow to edit all the tag, not only the plain text tag <b>⚠ Comingsoon</b><p style="display: inline; font-size: xx-small;"> (maybe...)</p></span>
+                            <span>: Allow to edit all the tag, not only the plain text tag</span>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" class="tacCheck" id="showNoMatch" ${userSettings.showNoMatch ? 'checked' : ''}>Dropsown no result
+                            </label>
+                        <span>: Show the dropdown fotter "No tag Found for: xxxxx"</span>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" class="tacCheck" id="urlParameter" ${userSettings.urlParameter ? 'checked' : ''}>Plugin URL Parameter
+                            </label>
+                        <span>: Use this pluggin url parameter</span>
                         </div>
                         <br>
                         <div>
@@ -255,6 +269,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                             <label for="all">Under the shearch bar</label>
                             <input type="radio" id="input" name="drdpos" class="tacRadio" value="input" ${userSettings.dropdownPosition == 'input' ? 'checked' : ''}>
                             <label for="input">Next to input</label>
+                            <input type="radio" id="text" name="drdpos" class="tacRadio" value="text" ${userSettings.dropdownPosition == 'text' ? 'checked' : ''}>
+                            <label for="text">Next to text</label>
                         </div>
                     </fieldset>
                     <fieldset>
@@ -387,16 +403,14 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             $('body').removeClass('noscroll');
         });
         $('body').click((e) => {
+            // Exit if clicked otside settings menu
             if (e.target.className == 'tac-overlay') {
-                // Exit if settings menu isn't clicked
                 $('.tac-overlay').remove();
             }
             if (!$('.tac-overlay').length) $('body').removeClass('noscroll');
         });
         $('.tacColorPiker').on('change', (e) => {
             document.getElementById('hex' + e.target.id.slice(3)).value = e.target.value.slice(1);
-            $('#setNotice').text('Applied Settings Will Take Effect On Reload');
-            reload = 1;
         });
         $('.tacColorText').on('change', (e) => {
             if (/[0-9A-Fa-f]{6}/.test(e.target.value)) {
@@ -404,20 +418,17 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             } else {
                 e.target.value = document.getElementById('tcp' + e.target.id.slice(3)).value.slice(1);
             }
-            $('#setNotice').text('Applied Settings Will Take Effect On Reload');
-            reload = 1;
-        });
-        $('.tacCheck').on('change', (e) => {
-            $('#setNotice').text('Applied Settings Will Take Effect On Reload');
-            reload = 1;
         });
         $('#tac-apply').click((e) => {
+            // Refresh userSettings variables
             userSettings.debugConsole = $('#dbConsole').is(':checked');
-            userSettings.hideOriginal = $('#hideOriginal').is(':checked');
+            userSettings.originalBar = $('#originalBar').is(':checked');
             userSettings.debugText = $('#dbText').is(':checked');
             userSettings.editableTag = $('#editAllTags').is(':checked');
+            userSettings.showNoMatch = $('#showNoMatch').is(':checked');
+            userSettings.urlParameter = $('#urlParameter').is(':checked');
             userSettings.dropdownPosition = $('input[name="drdpos"]:checked').val();
-
+            // Refresh website style
             sadpanda.female = $('#tcpfemale').val();
             sadpanda.male = $('#tcpmale').val();
             sadpanda.language = $('#tcplanguage').val();
@@ -431,8 +442,65 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             sadpanda.reclass = $('#tcpreclass').val();
             sadpanda.temp = $('#tcptemp').val();
             sadpanda.default = $('#tcpdefault').val();
-
+            // Save the new settings
             localStorage.setItem('tac-settings', JSON.stringify(userSettings));
+
+            // Applay userSettings without reload
+            document.querySelector(selector).style.display = userSettings.originalBar ? '' : 'none';
+            tag_bar.style.display = userSettings.debugText ? 'block' : 'none';
+
+            // If need to enable all tag editable: => remove editable atributes
+            // If need to disable all tag editable: => set corectly editable atributes
+            if (tag_bar.value) {
+                // If tag_bar.value != ''
+                tag_bar.value = userSettings.editableTag
+                    ? JSON.stringify(JSON.parse(tag_bar.value).map(({ editable, ...keepAttrs }) => keepAttrs))
+                    : JSON.stringify(JSON.parse(tag_bar.value).map((item) => ({ ...item, ...(!userSettings.editableTag && { editable: item.key.match(/^.*:.*$/g) ? false : true }) })));
+            }
+            userSettings.urlParameter ? tag_bar.setAttribute('name', 'tag_name_bar') : tag_bar.removeAttribute('name');
+
+            tagify.settings.dropdown.position = userSettings.dropdownPosition;
+
+            // Applay the new style
+            Array.from(document.getElementsByClassName('tac_female')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.female;
+            });
+            Array.from(document.getElementsByClassName('tac_male')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.male;
+            });
+            Array.from(document.getElementsByClassName('tac_language')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.language;
+            });
+            Array.from(document.getElementsByClassName('tac_cosplayer')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.cosplayer;
+            });
+            Array.from(document.getElementsByClassName('tac_parody')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.parody;
+            });
+            Array.from(document.getElementsByClassName('tac_character')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.character;
+            });
+            Array.from(document.getElementsByClassName('tac_group')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.group;
+            });
+            Array.from(document.getElementsByClassName('tac_artiste')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.artist;
+            });
+            Array.from(document.getElementsByClassName('tac_mixed')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.mixed;
+            });
+            Array.from(document.getElementsByClassName('tac_other')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.other;
+            });
+            Array.from(document.getElementsByClassName('tac_reclass')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.reclass;
+            });
+            Array.from(document.getElementsByClassName('tac_temp')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.temp;
+            });
+            Array.from(document.getElementsByClassName('tac_default')).forEach((elem) => {
+                elem.style = '--tag-bg:' + sadpanda.default;
+            });
         });
         $('#tagcssReset').click((e) => {
             // reset variable
@@ -457,8 +525,6 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             $('#tcpreclass').val(sadpanda.reclass).trigger('change');
             $('#tcptemp').val(sadpanda.temp).trigger('change');
             $('#tcpdefault').val(sadpanda.default).trigger('change');
-            $('#setNotice').text('Applied Settings Will Take Effect On Reload');
-            reload = 1;
         });
     };
 
@@ -652,7 +718,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                             return {
                                 key: key.tn.indexOf(' ') != -1 ? prefix + key.ns + ':"' + key.tn + '$"' : prefix + key.ns + ':' + key.tn + '$',
                                 value: key.ns + ':' + key.tn,
-                                editable: false,
+                                ...(!userSettings.editableTag && { editable: false }),
                                 highlights: (key.ns + ':' + key.tn).match(p) ? (key.ns + ':' + key.tn).replace(p, '<strong>$&</strong>') : key.ns + ':' + key.tn,
                                 ...(state && { state: state }),
                             };
@@ -902,9 +968,9 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     // var tag_bar = document.createElement("input");
     // tag_bar.setAttribute("type", "text");
     var tag_bar = document.createElement('textarea');
+    tag_bar.setAttribute('id', 'tag_auto_bar');
     tag_bar.style.display = userSettings.debugText ? 'block' : 'none';
-    tag_bar.setAttribute('id', 'tag_name_bar');
-    tag_bar.setAttribute('name', 'tag_name_bar'); // Remove this for disable the URL param
+    userSettings.urlParameter ? tag_bar.setAttribute('name', 'tag_name_bar') : ''; // Remove this for disable the URL param
     tag_bar.setAttribute('placeholder', 'Insert tags ');
     tag_bar.setAttribute('autofocus', '');
 
@@ -944,7 +1010,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     addStyle(CSSxSite);
 
     // Hide the original search bar
-    userSettings.hideOriginal ? $(selector).attr('style', 'display:none;') : '';
+    userSettings.originalBar ? '' : $(selector).attr('style', 'display:none;');
+
     // Append
     $(selector).after(container);
 
@@ -983,9 +1050,11 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                     </div>`;
             },
             dropdownItemNoMatch(data) {
-                return `<div class='${tagify.settings.classNames.dropdownItem}' value="noMatch" tabindex="0" role="option">
+                return userSettings.showNoMatch
+                    ? `<div class='${tagify.settings.classNames.dropdownItem}' value="noMatch" tabindex="0" role="option">
                     No tag found for: <strong>${data.value}</strong>
-                </div>`;
+                </div>`
+                    : '';
             },
         },
     });
@@ -998,11 +1067,11 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         // old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?)|((?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?)|([~-]?\"(?:[^\"]*)\")|([^\"\$ \n]+)/g);
         old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:\"?[^\$\"]*\$\"?)|(\"?[\w\s]*\$\"?)|([~-]?\"[^\"]*\")|([^\"\$ \n]+)/g);
         if (old_input) {
-            old_input = old_input.map(function (item, index) {
+            old_input = old_input.map((item, index) => {
                 return {
                     key: item.match(/^.*:.*$/g) ? item : null,
                     value: item.match(/^.*:.*$/g) ? item.replace(/["\'\$]/g, '') : item.replace(/[\'\$]/g, ''), // Don't remove " if a specific request
-                    editable: item.match(/^.*:.*$/g) ? false : true,
+                    ...(!userSettings.editableTag && { editable: item.match(/^.*:.*$/g) ? false : true }),
                 };
             });
         }
