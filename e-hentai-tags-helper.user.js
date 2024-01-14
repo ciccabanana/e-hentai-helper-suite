@@ -10,7 +10,7 @@
 // @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/e-hentai-tags-helper.user.js
 // @include     *://e-hentai.org/
 // @include     *://exhentai.org/
-// @include     /https?:\/\/e(-|x)hentai\.org\/(uploader\/.*|watched.*|tag\/.*|\?f_search.*|\?f_cats.*|doujinshi.*|manga.*|artistcg.*|gamecg.*|western.*|non-h.*|imageset.*|cosplay.*|asianporn.*|misc.*|\?tag_name_bar.*|\?f_shash.*|\?next.*|favorites\.php.*)/
+// @include     /https?:\/\/e(-|x)hentai\.org\/(uploader\/.*|watched.*|tag\/.*|\?f_search.*|\?f_cats.*|doujinshi.*|manga.*|artistcg.*|gamecg.*|western.*|non-h.*|imageset.*|cosplay.*|asianporn.*|misc.*|\?tag_name_bar.*|\?f_shash.*|\?next.*|\?prev.*|favorites\.php.*)/
 // @require https://code.jquery.com/jquery-3.7.1.min.js
 // @require https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/library/jQuery.tagify.min.js
 // @resource    TagifyCSS https://raw.githubusercontent.com/ciccabanana/e-hentai-helper-suite/master/resource/tagify.css
@@ -23,7 +23,7 @@
 
 // Object that contain the default settings
 const defaultSettings = {
-    debugConsole: true, // True => Print on console all the events 
+    debugConsole: true, // True => Print on console all the events
     originalBar: false, // True => Show the original search bar
     debugText: false, // True => Show the Tagify Text Area
     editableTag: false, // True => All tag are editable
@@ -682,7 +682,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
     //#region Tagify Events
 
-    const populatelist = (value) => {
+    const populatelist = (value, tagElm) => {
         tagify.whitelist = null; // Reset the whitelist
 
         let clear_value = value;
@@ -706,7 +706,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
         regex_replace(clear_value).then((pre_elab_result) => {
                 // show the loader animation
-                tagify.loading(true);
+                tagElm ? tagify.tagLoading(tagElm, true) : tagify.loading(true);
 
                 makeXMLRequest(api_url, 'POST', JSON.stringify({
                         method: 'tagsuggest',
@@ -736,7 +736,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                         // tagify.loading(false).dropdown.show(); // BUG? If show has no param there is some case that the dropdown don't show
                         // IF xx:tag => take only the tag
                         // If xx:tag => undefined take pre_elab_result
-                        tagify.loading(false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result);
+                        tagElm ? tagify.tagLoading(tagElm, false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result) : tagify.loading(false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result);
                     })
                     .catch((reason) => {
                         mConsole.m('Input').error('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
@@ -750,6 +750,11 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     const onAddTag = (e) => {
         if (userSettings.debugConsole) mConsole.m('Tag Add').debug(e.detail.data);
         tagify.whitelist = null;
+        // If taping fast and add a tag need to abort the request
+        // remove the dropdown end remove the loading symble
+        clearTimeout(typingDebounce);
+        tagify.dropdown.hide();
+        tagify.loading(false);
     };
 
     const onRemoveTag = (e) => {
@@ -857,10 +862,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         }
     };
 
-    // on character(s) added/removed (user is typing/deleting)
     const onInput = (e) => {
         if (userSettings.debugConsole) mConsole.m('Input').debug(e.detail);
-
         populatelist(e.detail.value);
     };
 
@@ -877,17 +880,95 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     };
 
     const onEditStart = (e) => {
-        if (userSettings.debugConsole) mConsole.m('edit:start').debug(e.detail);
+        if (userSettings.debugConsole) mConsole.m('edit:Start').debug(e.detail);
         const { tag: tagElm, data: tagData } = e.detail;
-        tagify.setTagTextNode(tagElm, `${tagData.key}`);
+        // Need the prefix during the edit
+        let prefix = '';
+        switch (tagData.state || 0) {
+            case -1:
+                prefix = '-';
+                break;
+            case 1:
+                prefix = '~';
+                break;
+        }
+        // Set the editing text the value not the key
+        tagify.setTagTextNode(tagElm, `${prefix}${tagData.value}`);
+    };
+    
+    const onEditInput = (e) => {
+        if (userSettings.debugConsole) mConsole.m('edit:Input').debug(e.detail);
+        populatelist(e.detail.data.newValue, e.detail.tag);
+    };
+
+    const onEditKeyDown = (e) => {
+        if (userSettings.debugConsole) mConsole.m('edit:Key Down').debug(e.detail);
+
+        // https://github.com/yairEO/tagify/blob/9d8b577860e961c40eb436629a35c5ad1fcbda9a/src/parts/dropdown.js#L389
+        let selectedElm = tagify.DOM.dropdown.querySelector(tagify.settings.classNames.dropdownItemActiveSelector),
+            selectedElmData = tagify.dropdown.getSuggestionDataByNode(selectedElm);
+
+        switch (e.detail.event.code) {
+            case 'ArrowDown':
+            case 'ArrowUp':
+            case 'Down': // >IE11
+            case 'Up': {
+                // >IE11
+                e.preventDefault();
+                // get all the dwropdown item
+                let dropdownItems = tagify.dropdown.getAllSuggestionsRefs();
+                // ceck if si an upkey
+                let actionUp = e.detail.event.code == 'ArrowUp' || e.detail.event.code == 'Up';
+                if (selectedElm) {
+                    selectedElm = tagify.dropdown.getNextOrPrevOption(selectedElm, !actionUp);
+                }
+                // if no element was found OR current item is not a "real" item, loop
+                if (!selectedElm /*|| !selectedElm.matches(tagify.settings.classNames.dropdownItemSelector)*/) {
+                    selectedElm = dropdownItems[actionUp ? dropdownItems.length - 1 : 0];
+                }
+                tagify.dropdown.highlightOption(selectedElm, true);
+                break;
+            }
+            case 'Escape':
+            case 'Esc': // IE11
+                tagify.dropdown.hide();
+                break;
+            case 'Enter': {
+                e.preventDefault();
+                tagify.settings.hooks
+                    .suggestionClick(e, { tagify: tagify, tagData: selectedElmData, suggestionElm: selectedElm })
+                    .then(() => {
+                        if (selectedElm) {
+                            tagify.dropdown.selectOption(selectedElm);
+                            // highlight next option
+                            selectedElm = tagify.dropdown.getNextOrPrevOption(selectedElm, !actionUp);
+                            tagify.dropdown.highlightOption(selectedElm);
+                            return;
+                        } else tagify.dropdown.hide();
+
+                        if (tagify.settings.mode != 'mix') tagify.addTags(tagify.state.inputText.trim(), true);
+                    })
+                    .catch((err) => err);
+                break;
+            }
+        }
+    };
+
+    const onEditbeforeUpdate = (e) => {
+        if (userSettings.debugConsole) mConsole.m('edit:Before Update').debug(e.detail);
+        // Manualy call transformTag
+        // tagify.settings.transformTag.call(tagify, e.detail.data, e.detail.previousData)
+    };
+
+    const onEditUpdated = (e) => {
+        if (userSettings.debugConsole) mConsole.m('edit:Updated').debug(e.detail);
     };
 
     const onClick = (e) => {
         // Switch between Normal -> Exclusion -> Or tags
         const { tag: tagElm, data: tagData } = e.detail;
-        if (tagify.state.editing)
-            // If editing return
-            return;
+        // If editing don't interrupt the edit
+        if (tagify.state.editing) return;
         // Delay needed to distinguish between regular click and double-click.
         // This allows enough time for a possible double-click, and noly fires if such
         // did not occur.
@@ -926,7 +1007,6 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     let clickDebounce = null; // Debounce while cliccking, allow doubleclick
     let api_url = null; // Url for api request
     let sadpanda = {}; // For the tag style
-    let reload = false; // For request of reload
     let CSSxSite = null;
 
     // Print site details
@@ -937,6 +1017,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         api_url = 'https://api.e-hentai.org/api.php';
         sadpanda = userSettings.style.base;
         CSSxSite = `
+        @charset "UTF-8";
         :root{
             --tagify-dd-bg-color: #EDEBDF;
             --tagify-dd-color-primary: #5C0D11;
@@ -956,6 +1037,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         api_url = 'https://exhentai.org/api.php';
         sadpanda = userSettings.style.exhentai;
         CSSxSite = `
+        @charset "UTF-8";
         :root{
             --tagify-dd-bg-color: #4F535B;
             --tagify-dd-color-primary: #F1F1F1;
@@ -1046,6 +1128,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         transformTag: tagAnalyzer,
         delimiters: null,
         // originalInputValueFormat: valuesArr => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable, ...(item.state != 0) && { state: item.state } }; })),
+        // prettier-ignore
         originalInputValueFormat: (valuesArr) => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable }; })),
         editTags: {
             clicks: 2,
@@ -1054,6 +1137,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         dropdown: {
             enabled: 2, // suggest tags after a single character input
             position: userSettings.dropdownPosition,
+            includeSelectedTags: true,
             // highlightFirst: true, // Don't otherwise can't insert normal text
         },
         templates: {
@@ -1066,7 +1150,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                     </tag>`;
             },
             dropdownItem(item) {
-                return `<div ${this.getAttributes(item)} class='${this.settings.classNames.dropdownItem} ${item.class ?? ''}' tabindex="0" role="option">
+                return `<div ${this.getAttributes(item)} class='${this.settings.classNames.dropdownItem} ${item.class || ''}' tabindex="0" role="option">
                         <span>${item.highlights}</span>
                     </div>`;
             },
@@ -1101,7 +1185,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     tagify.addTags(old_input);
 
     // Set event listeners
-    tagify.on('add', onAddTag)
+    tagify
+        .on('add', onAddTag)
         .on('remove', onRemoveTag)
         .on('input', onInput)
         .on('dropdown:select', onDropdownSelect)
@@ -1109,11 +1194,14 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         .on('keydown', onKeyDown)
         .on('click', onClick)
         .on('dblclick', ondblClick)
-        .on('edit:start', onEditStart);
+        .on('edit:start', onEditStart)
+        .on('edit:keydown', onEditKeyDown)
+        .on('edit:input', onEditInput)
+        .on('edit:beforeUpdate', onEditbeforeUpdate)
+        .on('edit:updated', onEditUpdated);
 
     mConsole.log('Ended Injection');
     if (userSettings.debugConsole) console.timeEnd('[Tags Auto Complete]: Inject time', 'Website loded');
-
 
     // Your code here...
 })();
