@@ -285,107 +285,107 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                         </h3>
                         <div class="ckpiker" style="width: 680px;display: flex;justify-content: space-between; flex-wrap: wrap;">
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpfemale" value="${sadpanda.female}">
+                                <input type="color" class="tacColorPiker" id="tcpfemale" value="${tagStyle.female}">
                                 <label for="tcpfemale">Female:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexfemale" value="${sadpanda.female.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexfemale" value="${tagStyle.female.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpmale" value="${sadpanda.male}">
+                                <input type="color" class="tacColorPiker" id="tcpmale" value="${tagStyle.male}">
                                 <label for="tcpmale">Male:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexmale" value="${sadpanda.male.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexmale" value="${tagStyle.male.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcplanguage" value="${sadpanda.language}">
+                                <input type="color" class="tacColorPiker" id="tcplanguage" value="${tagStyle.language}">
                                 <label for="tcplanguage">Language:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexlanguage" value="${sadpanda.language.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexlanguage" value="${tagStyle.language.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpcosplayer" value="${sadpanda.cosplayer}">
+                                <input type="color" class="tacColorPiker" id="tcpcosplayer" value="${tagStyle.cosplayer}">
                                 <label for="tcpcosplayer">Cosplayer:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexcosplayer" value="${sadpanda.cosplayer.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexcosplayer" value="${tagStyle.cosplayer.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpparody" value="${sadpanda.parody}">
+                                <input type="color" class="tacColorPiker" id="tcpparody" value="${tagStyle.parody}">
                                 <label for="tcpparody">Parody:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexparody" value="${sadpanda.parody.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexparody" value="${tagStyle.parody.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpcharacter" value="${sadpanda.character}">
+                                <input type="color" class="tacColorPiker" id="tcpcharacter" value="${tagStyle.character}">
                                 <label for="tcpcharacter">Character:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexcharacter" value="${sadpanda.character.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexcharacter" value="${tagStyle.character.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpgroup" value="${sadpanda.group}">
+                                <input type="color" class="tacColorPiker" id="tcpgroup" value="${tagStyle.group}">
                                 <label for="tcpgroup">Group:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexgroup" value="${sadpanda.group.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexgroup" value="${tagStyle.group.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpartist" value="${sadpanda.artist}">
+                                <input type="color" class="tacColorPiker" id="tcpartist" value="${tagStyle.artist}">
                                 <label for="tcpartist">Artist:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexartist" value="${sadpanda.artist.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexartist" value="${tagStyle.artist.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpmixed" value="${sadpanda.mixed}">
+                                <input type="color" class="tacColorPiker" id="tcpmixed" value="${tagStyle.mixed}">
                                 <label for="tcpmixed">Mixed:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexmixed" value="${sadpanda.mixed.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexmixed" value="${tagStyle.mixed.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpother" value="${sadpanda.other}">
+                                <input type="color" class="tacColorPiker" id="tcpother" value="${tagStyle.other}">
                                 <label for="tcpother">Other:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexother" value="${sadpanda.other.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexother" value="${tagStyle.other.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpreclass" value="${sadpanda.reclass}">
+                                <input type="color" class="tacColorPiker" id="tcpreclass" value="${tagStyle.reclass}">
                                 <label for="tcpreclass">Reclass:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexreclass" value="${sadpanda.reclass.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexreclass" value="${tagStyle.reclass.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcptemp" value="${sadpanda.temp}">
+                                <input type="color" class="tacColorPiker" id="tcptemp" value="${tagStyle.temp}">
                                 <label for="tcptemp">Temp:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hextemp" value="${sadpanda.temp.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hextemp" value="${tagStyle.temp.slice(1)}">
                                 </span>
                             </span>
                             <span>
-                                <input type="color" class="tacColorPiker" id="tcpdefault" value="${sadpanda.default}">
+                                <input type="color" class="tacColorPiker" id="tcpdefault" value="${tagStyle.default}">
                                 <label for="tcpdefault">Default:</label>
                                 <span class="hexwrapper">
                                     <span class="prefix">#</span>
-                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexdefault" value="${sadpanda.default.slice(1)}">
+                                    <input type="text" class="tacColorText" maxlength="6" pattern="[0-9A-Fa-f]{6}" id="hexdefault" value="${tagStyle.default.slice(1)}">
                                 </span>
                             </span>
                         </div>
@@ -432,19 +432,19 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             userSettings.urlParameter = $('#urlParameter').is(':checked');
             userSettings.dropdownPosition = $('input[name="drdpos"]:checked').val();
             // Refresh website style
-            sadpanda.female = $('#tcpfemale').val();
-            sadpanda.male = $('#tcpmale').val();
-            sadpanda.language = $('#tcplanguage').val();
-            sadpanda.cosplayer = $('#tcpcosplayer').val();
-            sadpanda.parody = $('#tcpparody').val();
-            sadpanda.character = $('#tcpcharacter').val();
-            sadpanda.group = $('#tcpgroup').val();
-            sadpanda.artist = $('#tcpartist').val();
-            sadpanda.mixed = $('#tcpmixed').val();
-            sadpanda.other = $('#tcpother').val();
-            sadpanda.reclass = $('#tcpreclass').val();
-            sadpanda.temp = $('#tcptemp').val();
-            sadpanda.default = $('#tcpdefault').val();
+            tagStyle.female = $('#tcpfemale').val();
+            tagStyle.male = $('#tcpmale').val();
+            tagStyle.language = $('#tcplanguage').val();
+            tagStyle.cosplayer = $('#tcpcosplayer').val();
+            tagStyle.parody = $('#tcpparody').val();
+            tagStyle.character = $('#tcpcharacter').val();
+            tagStyle.group = $('#tcpgroup').val();
+            tagStyle.artist = $('#tcpartist').val();
+            tagStyle.mixed = $('#tcpmixed').val();
+            tagStyle.other = $('#tcpother').val();
+            tagStyle.reclass = $('#tcpreclass').val();
+            tagStyle.temp = $('#tcptemp').val();
+            tagStyle.default = $('#tcpdefault').val();
             // Save the new settings
             localStorage.setItem('tac-settings', JSON.stringify(userSettings));
 
@@ -466,68 +466,68 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
             // Applay the new style
             Array.from(document.getElementsByClassName('tac_female')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.female;
+                elem.style = '--tag-bg:' + tagStyle.female;
             });
             Array.from(document.getElementsByClassName('tac_male')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.male;
+                elem.style = '--tag-bg:' + tagStyle.male;
             });
             Array.from(document.getElementsByClassName('tac_language')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.language;
+                elem.style = '--tag-bg:' + tagStyle.language;
             });
             Array.from(document.getElementsByClassName('tac_cosplayer')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.cosplayer;
+                elem.style = '--tag-bg:' + tagStyle.cosplayer;
             });
             Array.from(document.getElementsByClassName('tac_parody')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.parody;
+                elem.style = '--tag-bg:' + tagStyle.parody;
             });
             Array.from(document.getElementsByClassName('tac_character')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.character;
+                elem.style = '--tag-bg:' + tagStyle.character;
             });
             Array.from(document.getElementsByClassName('tac_group')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.group;
+                elem.style = '--tag-bg:' + tagStyle.group;
             });
             Array.from(document.getElementsByClassName('tac_artiste')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.artist;
+                elem.style = '--tag-bg:' + tagStyle.artist;
             });
             Array.from(document.getElementsByClassName('tac_mixed')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.mixed;
+                elem.style = '--tag-bg:' + tagStyle.mixed;
             });
             Array.from(document.getElementsByClassName('tac_other')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.other;
+                elem.style = '--tag-bg:' + tagStyle.other;
             });
             Array.from(document.getElementsByClassName('tac_reclass')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.reclass;
+                elem.style = '--tag-bg:' + tagStyle.reclass;
             });
             Array.from(document.getElementsByClassName('tac_temp')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.temp;
+                elem.style = '--tag-bg:' + tagStyle.temp;
             });
             Array.from(document.getElementsByClassName('tac_default')).forEach((elem) => {
-                elem.style = '--tag-bg:' + sadpanda.default;
+                elem.style = '--tag-bg:' + tagStyle.default;
             });
         });
         $('#tagcssReset').click((e) => {
             // reset variable
             if (location.hostname == 'e-hentai.org') {
                 userSettings.style.base = { ...defaultSettings.style.base };
-                sadpanda = userSettings.style.base;
+                tagStyle = userSettings.style.base;
             } else {
                 userSettings.style.exhentai = { ...defaultSettings.style.exhentai };
-                sadpanda = userSettings.style.exhentai;
+                tagStyle = userSettings.style.exhentai;
             }
             // reset the display color
-            $('#tcpfemale').val(sadpanda.female).trigger('change');
-            $('#tcpmale').val(sadpanda.male).trigger('change');
-            $('#tcplanguage').val(sadpanda.language).trigger('change');
-            $('#tcpcosplayer').val(sadpanda.cosplayer).trigger('change');
-            $('#tcpparody').val(sadpanda.parody).trigger('change');
-            $('#tcpcharacter').val(sadpanda.character).trigger('change');
-            $('#tcpgroup').val(sadpanda.group).trigger('change');
-            $('#tcpartist').val(sadpanda.artist).trigger('change');
-            $('#tcpmixed').val(sadpanda.mixed).trigger('change');
-            $('#tcpother').val(sadpanda.other).trigger('change');
-            $('#tcpreclass').val(sadpanda.reclass).trigger('change');
-            $('#tcptemp').val(sadpanda.temp).trigger('change');
-            $('#tcpdefault').val(sadpanda.default).trigger('change');
+            $('#tcpfemale').val(tagStyle.female).trigger('change');
+            $('#tcpmale').val(tagStyle.male).trigger('change');
+            $('#tcplanguage').val(tagStyle.language).trigger('change');
+            $('#tcpcosplayer').val(tagStyle.cosplayer).trigger('change');
+            $('#tcpparody').val(tagStyle.parody).trigger('change');
+            $('#tcpcharacter').val(tagStyle.character).trigger('change');
+            $('#tcpgroup').val(tagStyle.group).trigger('change');
+            $('#tcpartist').val(tagStyle.artist).trigger('change');
+            $('#tcpmixed').val(tagStyle.mixed).trigger('change');
+            $('#tcpother').val(tagStyle.other).trigger('change');
+            $('#tcpreclass').val(tagStyle.reclass).trigger('change');
+            $('#tcptemp').val(tagStyle.temp).trigger('change');
+            $('#tcpdefault').val(tagStyle.default).trigger('change');
         });
     };
 
@@ -562,20 +562,20 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             text = text.match(/^(x|mix).*:/i)
                 ? text.replace(/^(x|mix).*:/i, 'mixed:')
                 : text.match(/^(mis).*:/i)
-                ? text.replace(/^(mis).*:/i, 'temp:')
-                : text.match(/^(co).*:/i)
-                ? text.replace(/^(co).*:/i, 'cosplayer:')
-                : text
-                      .replace(/^t.*:/i, 'temp:')
-                      .replace(/^f.*:/i, 'female:')
-                      .replace(/^m.*:/i, 'male:')
-                      .replace(/^r.*:/i, 'reclass:')
-                      .replace(/^l.*:/i, 'language:')
-                      .replace(/^p.*:/i, 'parody:')
-                      .replace(/^c.*:/i, 'character:')
-                      .replace(/^g.*:/i, 'group:')
-                      .replace(/^a.*:/i, 'artist:')
-                      .replace(/^o.*:/i, 'other:');
+                    ? text.replace(/^(mis).*:/i, 'temp:')
+                    : text.match(/^(co).*:/i)
+                        ? text.replace(/^(co).*:/i, 'cosplayer:')
+                        : text
+                            .replace(/^t.*:/i, 'temp:')
+                            .replace(/^f.*:/i, 'female:')
+                            .replace(/^m.*:/i, 'male:')
+                            .replace(/^r.*:/i, 'reclass:')
+                            .replace(/^l.*:/i, 'language:')
+                            .replace(/^p.*:/i, 'parody:')
+                            .replace(/^c.*:/i, 'character:')
+                            .replace(/^g.*:/i, 'group:')
+                            .replace(/^a.*:/i, 'artist:')
+                            .replace(/^o.*:/i, 'other:');
             if (2 > text.replace(/^.*:/i, '').length) reject('Length < 2');
             else {
                 resolve(text);
@@ -705,43 +705,43 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         // TODO
 
         regex_replace(clear_value).then((pre_elab_result) => {
-                // show the loader animation
-                tagElm ? tagify.tagLoading(tagElm, true) : tagify.loading(true);
+            // show the loader animation
+            tagElm ? tagify.tagLoading(tagElm, true) : tagify.loading(true);
 
-                makeXMLRequest(api_url, 'POST', JSON.stringify({
-                        method: 'tagsuggest',
-                        text: pre_elab_result
-                    })).then((result) => {
+            makeXMLRequest(api_url, 'POST', JSON.stringify({
+                method: 'tagsuggest',
+                text: pre_elab_result
+            })).then((result) => {
 
-                        // Prepare the prefix for the key
-                        let prefix = state || 0 ? (state > 0 ? `~` : `-`) : '';
+                // Prepare the prefix for the key
+                let prefix = state || 0 ? (state > 0 ? `~` : `-`) : '';
 
-                        result = JSON.parse(result.responseText);
-                        var p = new RegExp('(^| |:)' + pre_elab_result, 'ig');
-                        var a = Object.values(result.tags).map((key) => {
-                            return {
-                                key: key.tn.indexOf(' ') != -1 ? prefix + key.ns + ':"' + key.tn + '$"' : prefix + key.ns + ':' + key.tn + '$',
-                                value: key.ns + ':' + key.tn,
-                                ...(!userSettings.editableTag && { editable: false }),
-                                highlights: (key.ns + ':' + key.tn).match(p) ? (key.ns + ':' + key.tn).replace(p, '<strong>$&</strong>') : key.ns + ':' + key.tn,
-                                ...(state && { state: state }),
-                            };
-                        });
-                        // replace tagify "whitelist" array values with new values
-                        // and add back the ones already choses as Tags
-                        tagify.settings.whitelist.push(...a, ...tagify.value);
+                result = JSON.parse(result.responseText);
+                var p = new RegExp('(^| |:)' + pre_elab_result, 'ig');
+                var a = Object.values(result.tags).map((key) => {
+                    return {
+                        key: key.tn.indexOf(' ') != -1 ? prefix + key.ns + ':"' + key.tn + '$"' : prefix + key.ns + ':' + key.tn + '$',
+                        value: key.ns + ':' + key.tn,
+                        ...(!userSettings.editableTag && { editable: false }),
+                        highlights: (key.ns + ':' + key.tn).match(p) ? (key.ns + ':' + key.tn).replace(p, '<strong>$&</strong>') : key.ns + ':' + key.tn,
+                        ...(state && { state: state }),
+                    };
+                });
+                // replace tagify "whitelist" array values with new values
+                // and add back the ones already choses as Tags
+                tagify.settings.whitelist.push(...a, ...tagify.value);
 
-                        // Render the suggestions dropdown.
-                        // tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
-                        // tagify.loading(false).dropdown.show(); // BUG? If show has no param there is some case that the dropdown don't show
-                        // IF xx:tag => take only the tag
-                        // If xx:tag => undefined take pre_elab_result
-                        tagElm ? tagify.tagLoading(tagElm, false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result) : tagify.loading(false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result);
-                    })
-                    .catch((reason) => {
-                        mConsole.m('Input').error('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
-                    });
+                // Render the suggestions dropdown.
+                // tagify.loading(false).dropdown.show.call(tagify, pre_elab_result);
+                // tagify.loading(false).dropdown.show(); // BUG? If show has no param there is some case that the dropdown don't show
+                // IF xx:tag => take only the tag
+                // If xx:tag => undefined take pre_elab_result
+                tagElm ? tagify.tagLoading(tagElm, false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result) : tagify.loading(false).dropdown.show(pre_elab_result.split(':')[1] ?? pre_elab_result);
             })
+                .catch((reason) => {
+                    mConsole.m('Input').error('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
+                });
+        })
             .catch((reason) => {
                 if (userSettings.debugConsole) mConsole.m('Input').debug('Pre-request elab failed. Reasion: ', reason);
             });
@@ -808,55 +808,55 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         var category = tagData.value.split(':')[0];
         switch (category) {
             case 'female':
-                tagData.style = '--tag-bg:' + sadpanda.female;
+                tagData.style = '--tag-bg:' + tagStyle.female;
                 tagData.class = 'tac_female';
                 break;
             case 'male':
-                tagData.style = '--tag-bg:' + sadpanda.male;
+                tagData.style = '--tag-bg:' + tagStyle.male;
                 tagData.class = 'tac_male';
                 break;
             case 'language':
-                tagData.style = '--tag-bg:' + sadpanda.language;
+                tagData.style = '--tag-bg:' + tagStyle.language;
                 tagData.class = 'tac_language';
                 break;
             case 'cosplayer':
-                tagData.style = '--tag-bg:' + sadpanda.cosplayer;
+                tagData.style = '--tag-bg:' + tagStyle.cosplayer;
                 tagData.class = 'tac_cosplayer';
                 break;
             case 'parody':
-                tagData.style = '--tag-bg:' + sadpanda.parody;
+                tagData.style = '--tag-bg:' + tagStyle.parody;
                 tagData.class = 'tac_parody';
                 break;
             case 'character':
-                tagData.style = '--tag-bg:' + sadpanda.character;
+                tagData.style = '--tag-bg:' + tagStyle.character;
                 tagData.class = 'tac_character';
                 break;
             case 'group':
-                tagData.style = '--tag-bg:' + sadpanda.group;
+                tagData.style = '--tag-bg:' + tagStyle.group;
                 tagData.class = 'tac_group';
                 break;
             case 'artist':
-                tagData.style = '--tag-bg:' + sadpanda.artist;
+                tagData.style = '--tag-bg:' + tagStyle.artist;
                 tagData.class = 'tac_artiste';
                 break;
             case 'mixed':
-                tagData.style = '--tag-bg:' + sadpanda.mixed;
+                tagData.style = '--tag-bg:' + tagStyle.mixed;
                 tagData.class = 'tac_mixed';
                 break;
             case 'other':
-                tagData.style = '--tag-bg:' + sadpanda.other;
+                tagData.style = '--tag-bg:' + tagStyle.other;
                 tagData.class = 'tac_other';
                 break;
             case 'reclass':
-                tagData.style = '--tag-bg:' + sadpanda.reclass;
+                tagData.style = '--tag-bg:' + tagStyle.reclass;
                 tagData.class = 'tac_reclass';
                 break;
             case 'temp':
-                tagData.style = '--tag-bg:' + sadpanda.temp;
+                tagData.style = '--tag-bg:' + tagStyle.temp;
                 tagData.class = 'tac_temp';
                 break;
             default:
-                tagData.style = '--tag-bg:' + sadpanda.default;
+                tagData.style = '--tag-bg:' + tagStyle.default;
                 tagData.class = 'tac_default';
                 break;
         }
@@ -895,7 +895,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         // Set the editing text the value not the key
         tagify.setTagTextNode(tagElm, `${prefix}${tagData.value}`);
     };
-    
+
     const onEditInput = (e) => {
         if (userSettings.debugConsole) mConsole.m('edit:Input').debug(e.detail);
         populatelist(e.detail.data.newValue, e.detail.tag);
@@ -1006,7 +1006,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     let typingDebounce = null; // Debounce while typing less server request
     let clickDebounce = null; // Debounce while cliccking, allow doubleclick
     let api_url = null; // Url for api request
-    let sadpanda = {}; // For the tag style
+    let tagStyle = {}; // For the tag style
     let CSSxSite = null;
 
     // Print site details
@@ -1015,7 +1015,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
     if (location.hostname == 'e-hentai.org') {
         api_url = 'https://api.e-hentai.org/api.php';
-        sadpanda = userSettings.style.base;
+        tagStyle = userSettings.style.base;
         CSSxSite = `
         @charset "UTF-8";
         :root{
@@ -1035,7 +1035,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         `;
     } else {
         api_url = 'https://exhentai.org/api.php';
-        sadpanda = userSettings.style.exhentai;
+        tagStyle = userSettings.style.exhentai;
         CSSxSite = `
         @charset "UTF-8";
         :root{
@@ -1199,6 +1199,37 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         .on('edit:input', onEditInput)
         .on('edit:beforeUpdate', onEditbeforeUpdate)
         .on('edit:updated', onEditUpdated);
+
+    // Add possibility to Remove tag with Middle Click
+    // prettier-ignore
+    document.addEventListener('mousedown', (event1) => {
+        // https://jsfiddle.net/KyleMit/1jr12rd3/
+        // https://stackoverflow.com/questions/30880757/javascript-equivalent-to-on
+        // Ceck for impossible problem 
+        (event1.button == 1 && event1.buttons != 4) || (event1.button != 1 && event1.buttons == 4) ? mConsole.m('Middle Click').log('Something go wrong', 'button:', event1.button, 'buttons:', event1.buttons) : '';
+        // Ceck if the button pressed is a middle click
+        if (event1.button == 1) {
+            // Ceck if mousedown is over a tagify__tag for prevent the scrolling
+            let t = event1.target;
+            while (t && t !== document) {
+                if (t.matches('.tagify__tag')) {
+                    mConsole.m('Mid Click').m('Down').log('Tag pressed:', t);
+                    event1.preventDefault();
+                    // addEventListener for ceck if the mouseup is over the same element
+                    document.addEventListener('mouseup', (event2) => {
+                        if (event1.target == event2.target) {
+                            // Create custom event middleclick
+                            mConsole.m('Mid Click').m('Up').log(event1, event2);
+                            mConsole.m('Mid Click').m('Tag Remove').log(t);
+                            tagify.removeTags(t);
+                        }
+                    }, { once: true });
+                    break;
+                }
+                t = t.parentNode;
+            }
+        }
+    });
 
     mConsole.log('Ended Injection');
     if (userSettings.debugConsole) console.timeEnd('[Tags Auto Complete]: Inject time', 'Website loded');
