@@ -1164,17 +1164,25 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         },
     });
 
+    /**
+     * regexp match for f_search:
+     * G1 - taggroup:tag$        
+     * G1 - taggroup:"tag with space$"
+     * G2 - "tag with space$"
+     * G2 - tagwithoutspace$
+     * G3 - "some specific term to search"
+     * G4 - various tag that will be matched separately
+     */
     // Get current search value
     const urlParams = new URLSearchParams(window.location.search);
     let old_input = urlParams.get('tag_name_bar');
     old_input = JSON.parse(old_input == '' ? null : old_input);
     if (old_input == null) {
-        // old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:(?:\")?(?:[^\$\"]*)\$(?:\")?)|((?:[^ ])(?:\")?(?:[\w\s]*)\$(?:\")?)|([~-]?\"(?:[^\"]*)\")|([^\"\$ \n]+)/g);
-        old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:\"?[^\$\"]*\$\"?)|(\"?[\w\s]*\$\"?)|([~-]?\"[^\"]*\")|([^\"\$ \n]+)/g);
+        old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:\"?[^\$\"]+\$\"?)|([~-]?\"?[\w\s.-]+\$\"?)|([~-]?\"[^\"]+\")|([^\"\$ \n]+)/g);
         if (old_input) {
             old_input = old_input.map((item, index) => {
                 return {
-                    key: item.match(/^.*:.*$/g) ? item : null,
+                    key: item.trimStart(),
                     value: item.match(/^.*:.*$/g) ? item.replace(/["\'\$]/g, '') : item.replace(/[\'\$]/g, ''), // Don't remove " if a specific request
                     ...(!userSettings.editableTag && { editable: item.match(/^.*:.*$/g) ? false : true }),
                 };
