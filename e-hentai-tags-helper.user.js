@@ -562,20 +562,20 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             text = text.match(/^(x|mix).*:/i)
                 ? text.replace(/^(x|mix).*:/i, 'mixed:')
                 : text.match(/^(mis).*:/i)
-                    ? text.replace(/^(mis).*:/i, 'temp:')
-                    : text.match(/^(co).*:/i)
-                        ? text.replace(/^(co).*:/i, 'cosplayer:')
-                        : text
-                            .replace(/^t.*:/i, 'temp:')
-                            .replace(/^f.*:/i, 'female:')
-                            .replace(/^m.*:/i, 'male:')
-                            .replace(/^r.*:/i, 'reclass:')
-                            .replace(/^l.*:/i, 'language:')
-                            .replace(/^p.*:/i, 'parody:')
-                            .replace(/^c.*:/i, 'character:')
-                            .replace(/^g.*:/i, 'group:')
-                            .replace(/^a.*:/i, 'artist:')
-                            .replace(/^o.*:/i, 'other:');
+                ? text.replace(/^(mis).*:/i, 'temp:')
+                : text.match(/^(co).*:/i)
+                ? text.replace(/^(co).*:/i, 'cosplayer:')
+                : text
+                      .replace(/^t.*:/i, 'temp:')
+                      .replace(/^f.*:/i, 'female:')
+                      .replace(/^m.*:/i, 'male:')
+                      .replace(/^r.*:/i, 'reclass:')
+                      .replace(/^l.*:/i, 'language:')
+                      .replace(/^p.*:/i, 'parody:')
+                      .replace(/^c.*:/i, 'character:')
+                      .replace(/^g.*:/i, 'group:')
+                      .replace(/^a.*:/i, 'artist:')
+                      .replace(/^o.*:/i, 'other:');
             if (2 > text.replace(/^.*:/i, '').length) reject('Length < 2');
             else {
                 resolve(text);
@@ -701,9 +701,10 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 break;
         }
 
-        // Analyze for Qualifiers "tag:" / "weak:" / "title:" / "uploader:" / "uploaduid:" / "gid:" / "comment:" / "favnote:"
         // TODO
+        // Analyze for Qualifiers "tag:" / "weak:" / "title:" / "uploader:" / "uploaduid:" / "gid:" / "comment:" / "favnote:"
 
+        // prettier-ignore
         regex_replace(clear_value).then((pre_elab_result) => {
             // show the loader animation
             tagElm ? tagify.tagLoading(tagElm, true) : tagify.loading(true);
@@ -712,7 +713,6 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 method: 'tagsuggest',
                 text: pre_elab_result
             })).then((result) => {
-
                 // Prepare the prefix for the key
                 let prefix = state || 0 ? (state > 0 ? `~` : `-`) : '';
 
@@ -786,10 +786,17 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         // Analize the tag before add it to the tagbar
 
         // If key don't exist add it to tagData
+        // => Happen only when plaintext is added
         tagData.key = tagData.key ?? tagData.value;
 
-        // If i'm editing a tag i need to update the key with the new value
-        tagData.key = tagify.state.editing ? tagData.value : tagData.key;
+        /**
+         * If I'm editing "plain text tag" I need to update the key with the new value inserted
+         * But if editig a tag selected from the suggetion I don't need to update the key
+         * Esay way: check the oldtagData is defined
+         * oldtagData is defined only when the new walue is a plain text
+         */
+        // tagData.key = tagify.state.editing ? tagData.value : tagData.key;
+        tagData.key = tagify.state.editing && oldtagData !== undefined ? tagData.value : tagData.key;
 
         // Analyze the key if has 'Exclusion' or 'Or' prefix
         // If the prefix exist remove it from value
@@ -1006,7 +1013,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     let typingDebounce = null; // Debounce while typing less server request
     let clickDebounce = null; // Debounce while cliccking, allow doubleclick
     let api_url = null; // Url for api request
-    let tagStyle = {}; // For the tag style
+    let tagStyle = {}; // For the current tag style
     let CSSxSite = null;
 
     // Print site details
@@ -1166,7 +1173,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
     /**
      * regexp match for f_search:
-     * G1 - taggroup:tag$        
+     * G1 - taggroup:tag$
      * G1 - taggroup:"tag with space$"
      * G2 - "tag with space$"
      * G2 - tagwithoutspace$
@@ -1244,4 +1251,5 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
     // Your code here...
 })();
+
 if (userSettings.debugConsole) console.timeEnd('[Tags Auto Complete]: Loading time');
