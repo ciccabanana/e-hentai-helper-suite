@@ -85,6 +85,10 @@ class CustomConsole {
         return Function.prototype.bind.call(console.debug, console, '%cTags Auto Complete', 'background-color: steelblue; color: black; padding: 2px 10px; border-radius: 3px;');
     })();
 
+    warn = (() => {
+        return Function.prototype.bind.call(console.warn, console, '%cTags Auto Complete', 'background-color: #F5B932; color: black; padding: 2px 10px; border-radius: 3px;');
+    })();
+
     m = (name, color = '', blocks = []) => {
         let fontColor = 'white';
         if (!color) color = this.stringToColour(name);
@@ -110,6 +114,9 @@ class CustomConsole {
         temp.debug = (() => {
             return Function.prototype.bind.call(console.debug, console, `%cTAC ${moduleText}`, 'background-color: steelblue; color: black; padding: 2px 10px; border-radius: 3px;', ...moduleStyle);
         })();
+        temp.warn = (() => {
+            return Function.prototype.bind.call(console.warn, console, `%cTAC ${moduleText}`, 'background-color: #F5B932; color: black; padding: 2px 10px; border-radius: 3px;', ...moduleStyle);
+        })();
         return temp;
     };
 
@@ -128,9 +135,15 @@ class CustomConsole {
         return colour;
     }
 
-    // https://stackoverflow.com/questions/64600665/javascript-is-there-a-way-for-a-point-to-see-the-background-color
+    // https://stackoverflow.com/questions/11867545/change-text-color-based-on-brightness-of-the-covered-background-area
     getColorByBgColor(bgColor) {
-        return parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2 ? '#000' : '#fff';
+        if (bgColor.length == 7) {
+            bgColor = bgColor.substring(1);
+        }
+        let R = parseInt(bgColor.substring(0, 2), 16);
+        let G = parseInt(bgColor.substring(2, 4), 16);
+        let B = parseInt(bgColor.substring(4, 6), 16);
+        return Math.sqrt(R * R * 0.241 + G * G * 0.691 + B * B * 0.068) < 130 ? '#fff' : '#000';
     }
 }
 
@@ -553,7 +566,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
      * @param {string} imput_string
      * @returns {Promise}
      */
-    const regex_replace = (imput_string) => {
+    const replaceTagGroups = (imput_string) => {
         return new Promise(function (resolve, reject) {
             // ^(x|mix|mis|co|t|f|m|r|l|p|c|g|a|o).*:
 
@@ -562,20 +575,20 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             text = text.match(/^(x|mix).*:/i)
                 ? text.replace(/^(x|mix).*:/i, 'mixed:')
                 : text.match(/^(mis).*:/i)
-                ? text.replace(/^(mis).*:/i, 'temp:')
-                : text.match(/^(co).*:/i)
-                ? text.replace(/^(co).*:/i, 'cosplayer:')
-                : text
-                      .replace(/^t.*:/i, 'temp:')
-                      .replace(/^f.*:/i, 'female:')
-                      .replace(/^m.*:/i, 'male:')
-                      .replace(/^r.*:/i, 'reclass:')
-                      .replace(/^l.*:/i, 'language:')
-                      .replace(/^p.*:/i, 'parody:')
-                      .replace(/^c.*:/i, 'character:')
-                      .replace(/^g.*:/i, 'group:')
-                      .replace(/^a.*:/i, 'artist:')
-                      .replace(/^o.*:/i, 'other:');
+                    ? text.replace(/^(mis).*:/i, 'temp:')
+                    : text.match(/^(co).*:/i)
+                        ? text.replace(/^(co).*:/i, 'cosplayer:')
+                        : text
+                            .replace(/^t.*:/i, 'temp:')
+                            .replace(/^f.*:/i, 'female:')
+                            .replace(/^m.*:/i, 'male:')
+                            .replace(/^r.*:/i, 'reclass:')
+                            .replace(/^l.*:/i, 'language:')
+                            .replace(/^p.*:/i, 'parody:')
+                            .replace(/^c.*:/i, 'character:')
+                            .replace(/^g.*:/i, 'group:')
+                            .replace(/^a.*:/i, 'artist:')
+                            .replace(/^o.*:/i, 'other:');
             if (2 > text.replace(/^.*:/i, '').length) reject('Length < 2');
             else {
                 resolve(text);
@@ -641,10 +654,10 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 makeXMLRequest(blobURL).then((result) => {
                     callback(result.responseText);
                 }).catch((reason) => {
-                    mConsole.m('getResource').error('Reasion: ', reason);
+                    mConsole.m('getResourceText').error('Reasion: ', reason);
                 });
             }).catch((reason) => {
-                mConsole.m('getResource').error('Reasion: ', reason);
+                mConsole.m('getResourceText').error('Reasion: ', reason);
             });
         }
     };
@@ -660,9 +673,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         // REF: https://gist.github.com/jwilson8767/db379026efcbd932f64382db4b02853e
         return new Promise((resolve, reject) => {
             let el = document.querySelector(selector);
-            if (el) {
-                resolve(el);
-            }
+            if (el) resolve(el);
             const observer = new MutationObserver(() => {
                 const element = document.querySelector(selector);
                 if (element) {
@@ -677,6 +688,31 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             });
         });
     };
+
+    const middleclickChecker = (container, selector) => {
+        container.addEventListener('mousedown', (event1) => {
+            // Ceck for impossible problem 
+            (event1.button == 1 && event1.buttons != 4) || (event1.button != 1 && event1.buttons == 4) ? mConsole.m('Middle Click').log('Something go wrong', 'button:', event1.button, 'buttons:', event1.buttons) : '';
+            // Ceck if the button pressed is a middle click
+            if (event1.button == 1) {
+                // Ceck if mousedown is over a tagify__tag for prevent the scrolling
+                let t = event1.target.closest(selector);
+                if (t !== null) {
+                    if (userSettings.debugConsole) mConsole.m('Middle Click').m('Down').log('Tag pressed:', t);
+                    event1.preventDefault();
+                    // addEventListener for ceck if the mouseup is over the same element
+                    container.addEventListener('mouseup', (event2) => {
+                        if (t == event2.target.closest(selector)) {
+                            // Create custom event middleclick
+                            // mConsole.m('Middle Click').m('Up').log(event1, event2);
+                            if (userSettings.debugConsole) mConsole.m('Middle Click').m('Tag Remove').log(t);
+                            tagify.removeTags(t);
+                        }
+                    }, { once: true });
+                }
+            }
+        });
+    }
 
     //#endregion
 
@@ -705,7 +741,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         // Analyze for Qualifiers "tag:" / "weak:" / "title:" / "uploader:" / "uploaduid:" / "gid:" / "comment:" / "favnote:"
 
         // prettier-ignore
-        regex_replace(clear_value).then((pre_elab_result) => {
+        replaceTagGroups(clear_value).then((pre_elab_result) => {
             // show the loader animation
             tagElm ? tagify.tagLoading(tagElm, true) : tagify.loading(true);
 
@@ -785,19 +821,6 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         if (userSettings.debugConsole) mConsole.m('Tag-Analyzer').debug(tagData, oldtagData);
         // Analize the tag before add it to the tagbar
 
-        // If key don't exist add it to tagData
-        // => Happen only when plaintext is added
-        tagData.key = tagData.key ?? tagData.value;
-
-        /**
-         * If I'm editing "plain text tag" I need to update the key with the new value inserted
-         * But if editig a tag selected from the suggetion I don't need to update the key
-         * Esay way: check the oldtagData is defined
-         * oldtagData is defined only when the new walue is a plain text
-         */
-        // tagData.key = tagify.state.editing ? tagData.value : tagData.key;
-        tagData.key = tagify.state.editing && oldtagData !== undefined ? tagData.value : tagData.key;
-
         // Analyze the key if has 'Exclusion' or 'Or' prefix
         // If the prefix exist remove it from value
         switch (tagData.value.charAt(0)) {
@@ -811,6 +834,19 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 break;
         }
 
+        // Prepare the prefix for the key
+        let prefix = tagData.state || 0 ? (tagData.state > 0 ? `~` : `-`) : '';
+
+        /**
+         * Note: oldtagData is defined only when editing & the new walue is a plain text (Not a dropdown select)
+         * If the key is undefined => Happen only when plaintext is added
+         *      tagData.key = prefix + tagData.value
+         * If I'm editing AND oldtagData not undefined I need to update the key with the new value inserted
+         *      tagData.key = prefix + tagData.value
+         * If I'm not editing AND the key is defined
+         *      tagData.key = prefix + tagData.key
+         */
+        tagData.key = prefix + ((tagify.state.editing && oldtagData !== undefined) || tagData.key === undefined ? tagData.value : tagData.key.charAt(0) == '~' || tagData.key.charAt(0) == '-' ? tagData.key.slice(1) : tagData.key);
         // set bakground color by category
         var category = tagData.value.split(':')[0];
         switch (category) {
@@ -1145,7 +1181,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             enabled: 2, // suggest tags after a single character input
             position: userSettings.dropdownPosition,
             includeSelectedTags: true,
-            // highlightFirst: true, // Don't otherwise can't insert normal text
+            highlightFirst: false, // false otherwise can't insert normal text
         },
         templates: {
             tag(tagData) {
@@ -1216,35 +1252,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         .on('edit:updated', onEditUpdated);
 
     // Add possibility to Remove tag with Middle Click
-    // prettier-ignore
-    document.addEventListener('mousedown', (event1) => {
-        // https://jsfiddle.net/KyleMit/1jr12rd3/
-        // https://stackoverflow.com/questions/30880757/javascript-equivalent-to-on
-        // Ceck for impossible problem 
-        (event1.button == 1 && event1.buttons != 4) || (event1.button != 1 && event1.buttons == 4) ? mConsole.m('Middle Click').log('Something go wrong', 'button:', event1.button, 'buttons:', event1.buttons) : '';
-        // Ceck if the button pressed is a middle click
-        if (event1.button == 1) {
-            // Ceck if mousedown is over a tagify__tag for prevent the scrolling
-            let t = event1.target;
-            while (t && t !== document) {
-                if (t.matches('.tagify__tag')) {
-                    mConsole.m('Mid Click').m('Down').log('Tag pressed:', t);
-                    event1.preventDefault();
-                    // addEventListener for ceck if the mouseup is over the same element
-                    document.addEventListener('mouseup', (event2) => {
-                        if (event1.target == event2.target) {
-                            // Create custom event middleclick
-                            mConsole.m('Mid Click').m('Up').log(event1, event2);
-                            mConsole.m('Mid Click').m('Tag Remove').log(t);
-                            tagify.removeTags(t);
-                        }
-                    }, { once: true });
-                    break;
-                }
-                t = t.parentNode;
-            }
-        }
-    });
+    middleclickChecker(container, ".tagify__tag");
 
     mConsole.log('Ended Injection');
     if (userSettings.debugConsole) console.timeEnd('[Tags Auto Complete]: Inject time', 'Website loded');
