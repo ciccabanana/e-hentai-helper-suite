@@ -35,27 +35,19 @@
 }
 
 .tagify__tag[state$='1']>div::before {
-    display: inline;
+    display: inline-flex;
+    align-items: center;
     font-style: italic;
-    font-weight: 800;
+    /* font-weight: 800; */
+    padding-inline: 4px 0;
 }
 
 .tagify__tag[state='-1']>div::before {
     content: '\268A';
-    padding: 5px 0 0 4px;
-}
-
-.tagify__tag[state='-1']:hover>div::before {
-    padding: 7px 0 0 6px;
 }
 
 .tagify__tag[state='1']>div::before {
     content: '\223C';
-    padding: 7px 0 0 4px;
-}
-
-.tagify__tag[state='1']:hover>div::before {
-    padding: 9px 0 0 6px;
 }
 
 .tagify__tag--editable[state$='1'] {

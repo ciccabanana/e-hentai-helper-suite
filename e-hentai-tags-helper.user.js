@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.3.0
+// @version 0.3.1
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
@@ -798,23 +798,10 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
      * @param {addStyle} callback
      */
     const getResourceText = async (resurce, callback) => {
-        mConsole.m('getResourceText').log('adsdasdasdasda', resurce);
-
         if (typeof GM_getResourceText !== 'undefined') {
             // Tampermonkey and Violentmonkey
             callback(GM_getResourceText(resurce));
         } else if (typeof GM.getResourceUrl !== 'undefined') {
-            // Greasemonkey and Tampermonkey (If TM compatibility is on)
-            // GM.getResourceUrl(resurce).then((blobURL) => {
-            //     makeXMLRequest(blobURL).then((result) => {
-            //         callback(result.responseText);
-            //     }).catch((reason) => {
-            //         mConsole.m('getResourceText').error('Reasion: ', reason);
-            //     });
-            // }).catch((reason) => {
-            //     mConsole.m('getResourceText').error('Reasion: ', reason);
-            // });
-
             let blobURL;
             try {
                 blobURL = await GM.getResourceUrl(resurce);
@@ -1203,7 +1190,9 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         if (userSettings.debugConsole) mConsole.m('IndexDB').m('addBookmark').debug('shInput:', bmInput);
 
         let temp = await getBookmarks();
-        temp.push(bmInput);
+        // Uncaught Error: Not allowed to define cross-origin object as property on [Object] or [Array] XrayWrapper
+        // temp.push(bmInput);
+        temp = [...temp, bmInput];
 
         let objStore = getObjectStore(DB_STORE_NAME_B, 'readwrite');
         let openRequest = objStore.openCursor(DB_STORE_NAME_B);
@@ -1530,8 +1519,9 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             }
             $(selector).submit();
         }
-        if (e.detail.event.ctrlKey && e.detail.event.keyCode == 66) {
-            // ctrl + B
+        if (e.detail.event.altKey && e.detail.event.keyCode == 66) {
+            // alt + B
+            e.preventDefault();
             bookmarksEvent();
         }
     };
@@ -1725,8 +1715,9 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
     const onEditKeyDown = (e) => {
         if (userSettings.debugConsole) mConsole.m('edit:Key Down').debug(e.detail);
-        if (e.detail.event.ctrlKey && e.detail.event.keyCode == 66) {
-            // ctrl + B
+        if (e.detail.event.altKey && e.detail.event.keyCode == 66) {
+            // alt + B
+            e.preventDefault();
             bookmarksEvent();
         }
     };
@@ -1886,7 +1877,11 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     if (userSettings.debugConsole) console.timeLog('[Tags Auto Complete]: Inject time', 'Website loded');
 
     // Append all the style at the head
-    getResourceText('TagifyCSS', addStyle);
+    /**
+     * Need await on Greasemonkey CSSxSite was loaded before TagifyCSS
+     * So the :root of TagifyCSS was prioritized
+     */
+    await getResourceText('TagifyCSS', addStyle);
     addStyle(CSSxSite);
 
     // Hide the original search bar
