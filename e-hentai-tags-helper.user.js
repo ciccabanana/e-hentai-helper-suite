@@ -2,7 +2,7 @@
 // @name Tags Auto Complete
 // @namespace https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.3.1
+// @version 0.3.2
 // @encoding utf-8
 // @author      ciccabanana
 // @description     Replace normal search bar with new one whit autocomplete of tags
