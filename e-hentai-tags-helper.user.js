@@ -253,7 +253,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 <nav id="tac-topNav">
                     <span id="tac-home" style="float: left; border: none; padding: 0 0 0 15px;">
                         Tags auto complete 3.0 • 
-                        <b><a href="https://github.com/Mayriad/Mayriads-EH-Master-Script" target="_blank" rel="noopener noreferrer">GitHub Repository</a></b> • 
+                        <b><a href="https://github.com/ciccabanana/e-hentai-helper-suite" target="_blank" rel="noopener noreferrer">GitHub Repository</a></b> • 
                         <b><a href="https://forums.e-hentai.org/index.php?showtopic=242709" target="_blank" rel="noopener noreferrer">Support Thread</a></b> 
                     </span>
                     <div>
@@ -877,7 +877,6 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                         (event2) => {
                             if (t == event2.target.closest(selector)) {
                                 // Create custom event middleclick
-                                // mConsole.m('Middle Click').m('Up').log(event1, event2);
                                 if (userSettings.debugConsole) mConsole.m('Middle Click').m('Tag Remove').log(t);
                                 barr.removeTags(t);
                             }
@@ -1064,7 +1063,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
      *                          or rejects with an error object containing details if the operation fails.
      */
     const clearResearch = () => {
-        mConsole.m('IndexDB').m('clearResearch').log('Start');
+        mConsole.m('IndexDB').m('clearResearch').log('Start...');
         return new Promise((resolve, reject) => {
             let objStore = getObjectStore(DB_STORE_NAME_R, 'readwrite');
             let request = objStore.clear();
@@ -1089,7 +1088,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
      *                          or rejects with an error object containing details if the operation fails.
      */
     const removeOldResearch = () => {
-        mConsole.m('IndexDB').m('removeOldResearch').log('Start');
+        mConsole.m('IndexDB').m('removeOldResearch').log('Start...');
         return new Promise((resolve, reject) => {
             let objStore = getObjectStore(DB_STORE_NAME_R, 'readwrite');
             let myIndex = objStore.index('timestamp');
@@ -1100,7 +1099,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 if (cursor) {
                     const request = cursor.delete();
                     request.onsuccess = () => {
-                        mConsole.m('IndexDB').m('removeOldResearch').log(cursor.value);
+                        if (userSettings.debugConsole) mConsole.m('IndexDB').m('removeOldResearch').debug(cursor.value);
                     };
                     cursor.continue();
                 } else {
@@ -1398,9 +1397,9 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             // Try to Get Research froma cache
             try {
                 cache = await getResearch(pre_elab_replace);
-                mConsole.m('Populate').m('getResearch').debug('Trovato', cache);
+                if (userSettings.debugConsole) mConsole.m('Populate').m('getResearch').debug('Found', cache);
             } catch (reason) {
-                mConsole.m('Populate').m('getResearch').debug('Non trovato', reason);
+                if (userSettings.debugConsole) mConsole.m('Populate').m('getResearch').debug('Non found', reason);
                 return;
             }
 
@@ -1420,7 +1419,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 let result_API_new;
                 try {
                     result_API_new = await makeXMLRequest(api_url, 'POST', JSON.stringify({ method: 'tagsuggest', text: pre_elab_replace }));
-                    mConsole.m('Populate').m('makeXMLRequest').log(result_API_new);
+                    if (userSettings.debugConsole) mConsole.m('Populate').m('makeXMLRequest').log(result_API_new);
                 } catch (reason) {
                     mConsole.m('Populate').error('Server request failed.\nStatus: ', reason.status, '\nResponse: ', reason.statusText);
                     return;
@@ -1445,12 +1444,12 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 addResearch(pre_elab_replace, newArray);
 
                 whitelist = addBookmarkState(bookmarks, whitelist);
-                mConsole.m('Populate').m('Response').m('Api').log(...whitelist);
+                if (userSettings.debugConsole) mConsole.m('Populate').m('Response').m('Api').debug(...whitelist);
             } else {
                 // Add state & editable & qualifiers & feneric that not stored
                 cache = cache.map((elm) => ({ ...elm, ...(!userSettings.editableTag && { editable: false }), ...(state && { state: state }), ...(qualifiers && { qualifiers: qualifiers }), ...(generic && { generic: generic }) }));
                 whitelist = addBookmarkState(bookmarks, cache);
-                mConsole.m('Populate').m('Response').m('Cached').log(...whitelist);
+                if (userSettings.debugConsole) mConsole.m('Populate').m('Response').m('Cached').debug(...whitelist);
             }
 
             tagifybar.whitelist.push(...whitelist);
@@ -1999,13 +1998,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         .on('edit:keydown', onEditKeyDown)
         .on('edit:input', onEditInput)
         .on('edit:beforeUpdate', onEditbeforeUpdate)
-        .on('edit:updated', onEditUpdated)
-        .on('dropdown:show', (e) => {
-            mConsole.m('dropdown:show').log(e, tagify.whitelist);
-        })
-        .on('focus', (e) => {
-            mConsole.m('focus').log(e);
-        });
+        .on('edit:updated', onEditUpdated);
 
     // Add possibility to Remove tag with Middle Click
     // prettier-ignore
