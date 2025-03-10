@@ -1,28 +1,67 @@
 // ==UserScript==
-// @name Tags Auto Complete
-// @namespace https://github.com/ciccabanana/e-hentai-helper-suite
+// @name        Tags Auto Complete
+// @namespace   https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.3.2
-// @encoding utf-8
+// @version     0.3.2
 // @author      ciccabanana
-// @description     Replace normal search bar with new one whit autocomplete of tags
-// @icon            https://e-hentai.org/favicon.ico
-// @supportURL https://github.com/ciccabanana/e-hentai-helper-suite/issues
+// @description Replace normal search bar with new one whit autocomplete of tags
+// @icon        https://e-hentai.org/favicon.ico
+// @supportURL  https://github.com/ciccabanana/e-hentai-helper-suite/issues
 // @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/e-hentai-tags-helper.user.js
-// @include     *://e-hentai.org/
-// @include     *://exhentai.org/
-// @include     /https?:\/\/e(-|x)hentai\.org\/(uploader\/.*|watched.*|tag\/.*|\?f_search.*|\?f_cats.*|doujinshi.*|manga.*|artistcg.*|gamecg.*|western.*|non-h.*|imageset.*|cosplay.*|asianporn.*|misc.*|\?tag_name_bar.*|\?f_shash.*|\?next.*|\?prev.*|favorites\.php.*)/
-// @require https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @match       *://e-hentai.org/
+// @match       *://e-hentai.org/doujinshi*
+// @match       *://e-hentai.org/manga*
+// @match       *://e-hentai.org/artistcg*
+// @match       *://e-hentai.org/gamecg*
+// @match       *://e-hentai.org/western*
+// @match       *://e-hentai.org/non-h*
+// @match       *://e-hentai.org/imageset*
+// @match       *://e-hentai.org/cosplay*
+// @match       *://e-hentai.org/asianporn*
+// @match       *://e-hentai.org/misc*
+// @match       *://e-hentai.org/uploader/*
+// @match       *://e-hentai.org/watched*
+// @match       *://e-hentai.org/tag/*
+// @match       *://e-hentai.org/?f_search*
+// @match       *://e-hentai.org/?f_cats*
+// @match       *://e-hentai.org/?f_shash*
+// @match       *://e-hentai.org/?next*
+// @match       *://e-hentai.org/?prev*
+// @match       *://e-hentai.org/favorites.php*
+// @match       *://e-hentai.org/?tag_name_bar*
+// @match       *://exhentai.org/
+// @match       *://exhentai.org/doujinshi*
+// @match       *://exhentai.org/manga*
+// @match       *://exhentai.org/artistcg*
+// @match       *://exhentai.org/gamecg*
+// @match       *://exhentai.org/western*
+// @match       *://exhentai.org/non-h*
+// @match       *://exhentai.org/imageset*
+// @match       *://exhentai.org/cosplay*
+// @match       *://exhentai.org/asianporn*
+// @match       *://exhentai.org/misc*
+// @match       *://exhentai.org/uploader/*
+// @match       *://exhentai.org/watched*
+// @match       *://exhentai.org/tag/*
+// @match       *://exhentai.org/?f_search*
+// @match       *://exhentai.org/?f_cats*
+// @match       *://exhentai.org/?f_shash*
+// @match       *://exhentai.org/?next*
+// @match       *://exhentai.org/?prev*
+// @match       *://exhentai.org/favorites.php*
+// @match       *://exhentai.org/?tag_name_bar*
 
-// @require https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.27.0/dist/tagify.min.js
+// @require     https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @require     https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.27.0/dist/tagify.min.js
+
 // @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/resource/tagify.css
 
-// @require https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
-// @require https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js
-// @run-at document-start
+// @require     https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
+// @require     https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js
+// @run-at      document-start
 
-// @grant   GM_getResourceText
-// @grant   GM.getResourceUrl
+// @grant       GM_getResourceText
+// @grant       GM.getResourceUrl
 
 // ==/UserScript==
 
