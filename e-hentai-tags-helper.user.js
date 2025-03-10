@@ -80,6 +80,7 @@ const defaultSettings = {
     editableTag: false, // True => All tag are editable
     showNoMatch: false, // True => Enable the footer "No tag Found for: xxxxx"
     urlParameter: false, // True => Enale the this plugin url parameter
+    pasteAsTags: true, // True => Automatically converts pasted text into tags
     expiration: 1,
     dropdownPosition: 'all',
     style: {
@@ -120,7 +121,13 @@ const defaultSettings = {
             // Non-H =>
         },
     },
-    version: 2,
+    shortcut: {
+        ctrlKey: false,
+        shiftKey: false,
+        altKey: true,
+        key: 'b'
+    },
+    version: 3,
 };
 
 // Class wrapper for custom console
@@ -339,6 +346,12 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                         <span>: Use this plugin url parameter</span>
                         </div>
                         <div>
+                            <label>
+                                <input type="checkbox" class="tacCheck" id="pasteAsTags" ${userSettings.pasteAsTags ? 'checked' : ''}>Paste as Tags
+                            </label>
+                        <span>: Automatically converts pasted text into tags</span>
+                        </div>
+                        <div>
                             <p>Position of the suggestion list:</p>
                             <input type="radio" id="all" name="drdpos" class="tacRadio" value="all" ${userSettings.dropdownPosition == 'all' ? 'checked' : ''}>
                             <label for="all">Under the search bar</label>
@@ -346,6 +359,10 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                             <label for="input">Next to input</label>
                             <input type="radio" id="text" name="drdpos" class="tacRadio" value="text" ${userSettings.dropdownPosition == 'text' ? 'checked' : ''}>
                             <label for="text">Next to text</label>
+                        </div>
+                        <div>
+                            <label for="tacbookmarkskeys"><b>Shortcut for bookmarks:</b></label> 
+                            <input type="text" id="tacbookmarkskeys" value="${(userSettings.shortcut.ctrlKey ? "Ctrl + " : '') + (userSettings.shortcut.altKey ? "Alt + " : '') + (userSettings.shortcut.shiftKey ? "Shift + " : '') + userSettings.shortcut.key}" readonly>
                         </div>
                     </fieldset>
                     <fieldset>
@@ -603,6 +620,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             userSettings.editableTag = $('#editAllTags').is(':checked');
             userSettings.showNoMatch = $('#showNoMatch').is(':checked');
             userSettings.urlParameter = $('#urlParameter').is(':checked');
+            userSettings.pasteAsTags = $('#pasteAsTags').is(':checked');
             userSettings.expiration = parseInt($('#expiration').val());
             userSettings.dropdownPosition = $('input[name="drdpos"]:checked').val();
             // Refresh website style
@@ -621,6 +639,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             tagStyle.tag1 = $('#tcptag1').val();
             tagStyle.tag2 = $('#tcptag2').val();
             tagStyle.default = $('#tcpdefault').val();
+            userSettings.shortcut = Object.keys(keysPressedResult).length === 0 && keysPressedResult.constructor === Object ? defaultSettings.shortcut : keysPressedResult;
+
             // Save the new settings
             localStorage.setItem('tac-settings', JSON.stringify(userSettings));
 
@@ -641,6 +661,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
             tagify.settings.dropdown.position = userSettings.dropdownPosition;
             tagifyBooks.settings.dropdown.position = userSettings.dropdownPosition;
+            tagify.settings.pasteAsTags = userSettings.pasteAsTags
 
             addBookmarks(JSON.parse(tagifyBooks.DOM.originalInput.tagifyValue ? tagifyBooks.DOM.originalInput.tagifyValue : '[]'));
             setTBookmarks();
@@ -723,6 +744,32 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         });
         $('#tagbkmReset').click((e) => {
             tagifyBooks.removeAllTags();
+        });
+
+        let keysPressed = {};
+        let keysPressedResult = {};
+
+        $('#tacbookmarkskeys').on("keydown", (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            keysPressed[e.key] = true;
+
+            mConsole.m('Shortcut-KeyDown').log(keysPressed);
+            mConsole.m('Shortcut-KeyPress').log("Alt:", e.altKey, "Ctrl:", e.ctrlKey, "Shift:", e.shiftKey, "Key:", e.key);
+            if ((e.ctrlKey || e.altKey) && e.keyCode > 32 && e.keyCode < 127) {
+                let t = (e.ctrlKey ? "Ctrl + " : '') + (e.altKey ? "Alt + " : '') + (e.shiftKey ? "Shift + " : '') + e.key.toUpperCase()
+                keysPressedResult.ctrlKey = e.ctrlKey;
+                keysPressedResult.altKey = e.altKey;
+                keysPressedResult.shiftKey = e.shiftKey;
+                keysPressedResult.key = e.key.toUpperCase();
+                $('#tacbookmarkskeys').val(t);
+            }
+        });
+        $('#tacbookmarkskeys').on("keyup", (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            delete keysPressed[e.key];
+            mConsole.m('Shortcut-KeyUp').log(keysPressed, e);
         });
     };
 
@@ -1557,7 +1604,12 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             }
             $(selector).submit();
         }
-        if (e.detail.event.altKey && e.detail.event.keyCode == 66) {
+        // if (e.detail.event.altKey && e.detail.event.keyCode == 66) {
+        if (
+            e.detail.event.ctrlKey == userSettings.shortcut.ctrlKey &&
+            e.detail.event.altKey == userSettings.shortcut.altKey &&
+            e.detail.event.shiftKey == userSettings.shortcut.shiftKey &&
+            e.detail.event.key.toUpperCase() == userSettings.shortcut.key.toUpperCase()) {
             // alt + B
             e.preventDefault();
             bookmarksEvent();
@@ -1937,6 +1989,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     var tagify = new Tagify(tag_bar, {
         transformTag: tagAnalyzer,
         delimiters: null,
+        pasteAsTags: userSettings.pasteAsTags,
         // originalInputValueFormat: valuesArr => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable, ...(item.state != 0) && { state: item.state } }; })),
         // prettier-ignore
         originalInputValueFormat: (valuesArr) => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable }; })),
