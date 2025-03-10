@@ -11,16 +11,17 @@
 .tagcomplete>.settings {
     position: absolute;
     /* top: 12px; */
-    top: 52%;
-    transform: translateY(-48%);
-    -ms-transform: translateY(-48%);
-    -moz-transform: translateY(-48%);
-    -webkit-transform: translateY(-48%);
-    -o-transform: translateY(-48%);
+    top: 50%;
+    transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
     right: 4px;
     z-index: 1;
     cursor: pointer;
     fill: var(--placeholder-color);
+    display: flex;
 }
 
 .tagcomplete>.operator {
@@ -101,14 +102,25 @@
     border: 1px solid var(--tags-border-color);
     cursor: pointer;
     font-weight: bold;
-    padding: 3px 20px;
+    padding: 3px 15px;
     text-decoration: none;
     color: inherit;
     /* margin-left: 5px; */
     margin: 2px 0px 2px 5px;
+    min-height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    fill: var(--placeholder-color)
 }
 
-.tac-overlay button:hover {
+.tac-overlay button:disabled, .tac-overlay button[disabled] {
+    color: #bbb;
+    fill: #bbb;
+    border-color: #bbb;
+}
+
+.tac-overlay button:hover:enabled {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -206,6 +218,7 @@
 
 .section-container fieldset {
     padding-right: 18px;
+    position: relative;
 }
 
 input[type='checkbox'].tacCheck {
@@ -293,17 +306,89 @@ input[type='text'].tacColorText:invalid {
     border-top: 1px solid var(--placeholder-color);
 }
 
+.tac-control-tr{
+    position: absolute;
+    float: right;
+    right: 20px;
+    top: 0;
+    display: flex;
+}
+
 .tac-control {
     position: relative;
     float: right;
     right: -5px;
+    display: flex;
 }
 
 #tac-visControls {
-    top: -6px;
-    display: flex;
     flex-direction: column;
 }
+
+.more-margin {
+    margin-top: 10px !important;
+}
+
+.tac-apply::before{
+    content: "Applyed!";
+}
+
+.tac-copy::before{
+    content: "Copied!";
+}
+
+.tac-paste::before{
+    content: "Pasted!";
+}
+
+.tac-import::before{
+    content: "Imported!";
+}
+
+.tac-popup::before{    
+    /* content: "TEXT"; */
+    position: absolute;
+    background: #5c81dc;
+    padding: 8px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    opacity: 0;
+    transition: visibility 0s .9s, opacity .9s linear;
+    color: var(--tagify-dd-color-primary);
+    background: var(--tagify-dd-bg-color);
+    border: 1.3px solid hsl(from var(--placeholder-color) h s calc(l - 15));
+    transform: translate(0px, -38px);
+    transform-origin: center;
+    visibility: hidden;
+}
+
+.tac-popup::after{
+    content: "";
+    position: absolute;
+    opacity: 0;
+    transition: visibility 0s .9s, opacity .9s linear;
+    transform: translate(0px, -22px) rotate(45deg);
+    transform-origin: center;
+    /* border-bottom: 5px solid var(--tagify-dd-bg-color); */
+    /* border-left: 5px solid transparent; */
+    /* border-top: 5px solid transparent; */
+    /* border-right: 5px solid var(--tagify-dd-bg-color); */
+    visibility: hidden;
+
+    border-bottom: 1.3px solid hsl(from var(--placeholder-color) h s calc(l - 15));
+    border-right: 1.3px solid hsl(from var(--placeholder-color) h s calc(l - 15));
+    width: 10px;
+    height: 10px;
+    background: var(--tagify-dd-bg-color);
+}
+
+.tac-popup.active::before,.tac-popup.active::after {
+    /* transition: opacity .6s linear, visibility 1s linear; */
+    transition: opacity .6s linear;
+    opacity: 1;
+    visibility: visible;
+}
+
 
 .tac-overlay nav>div {
     text-align: right;
@@ -529,8 +614,6 @@ input[type='text'].tacColorText:invalid {
 .tagify__tag {
     display: inline-flex;
     align-items: center;
-    /* margin: 5px 0 5px 5px; */
-    /*removed 4.18.1*/
     max-width: var(--tag--max-width);
     margin-inline: 5px 0;
     margin-block: 5px;
@@ -546,9 +629,7 @@ input[type='text'].tacColorText:invalid {
 
 .tagify__tag>div {
     display: flex;
-    /*new add release*/
     flex: 1;
-    /*new add release*/
     vertical-align: top;
     box-sizing: border-box;
     max-width: 100%;
@@ -573,7 +654,6 @@ input[type='text'].tacColorText:invalid {
 
 .tagify__tag>div>[contenteditable] {
     display: block;
-    /*new add release*/
     outline: 0;
     -webkit-user-select: text;
     user-select: text;
@@ -905,6 +985,12 @@ input[type='text'].tacColorText:invalid {
     transform: translate(-150%, -50%) rotate(270deg) scaleY(1.2);
 }
 
+.tagify--select[aria-expanded='true'] .tagify__tag__removeBtn {
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(100%) translateX(5px);
+}
+
 .tagify--select .tagify__tag {
     flex: 1;
     max-width: none;
@@ -975,6 +1061,7 @@ input[type='text'].tacColorText:invalid {
 }
 
 .tagify__dropdown__wrapper {
+    scroll-behavior: auto;
     font-size: 10pt;
     max-height: var(--tagify-dd-max-height);
     overflow: hidden;
