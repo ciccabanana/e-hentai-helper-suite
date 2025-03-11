@@ -7,7 +7,7 @@
 // @description Replace normal search bar with new one whit autocomplete of tags
 // @icon        https://e-hentai.org/favicon.ico
 // @supportURL  https://github.com/ciccabanana/e-hentai-helper-suite/issues
-// @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/e-hentai-tags-helper.user.js
+// @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/e-hentai-tags-helper.user.js
 // @match       *://e-hentai.org/
 // @match       *://e-hentai.org/doujinshi*
 // @match       *://e-hentai.org/manga*
@@ -54,7 +54,7 @@
 // @require     https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require     https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.33.2/dist/tagify.min.js
 
-// @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/resource/tagify.css
+// @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/resource/tagify.css
 
 // @require     https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
 // @require     https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js

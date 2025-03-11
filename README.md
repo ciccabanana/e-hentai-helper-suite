@@ -9,7 +9,7 @@ Collection of userscripts for a better navigation on e-hentai
   Replace normal search bar with new one whit autocomplete of tags
 </p>
 
-**[Direct Install](https://github.com/ciccabanana/e-hentai-helper-suite/blob/master/e-hentai-tags-helper.user.js)** | 
+**[Direct Install](https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/e-hentai-tags-helper.user.js)** | 
 **[Support Thread](https://forums.e-hentai.org/index.php?showtopic=242709)**
 
 ### Features
@@ -43,7 +43,7 @@ With this feature the user can easily export and import the bookmarks or the set
 
 Using copy and import, the user can paste its bookmarks or setting in the support script "Tags Autocomplete Import Settings & Bookmarks" and import from it every time it wants. This functionality is useful for the user who use incognito mode.
 
-N.B. The feature Import need the support script that can be installed clicking this link: **[Install support script](https://github.com/ciccabanana/e-hentai-helper-suite/blob/master/e-hentai-tags-helper.user.js)** 
+N.B. The feature Import need the support script that can be installed clicking this link: **[Install support script](https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/e-hentai-tags-helper.user.js)** 
 
 For info how to use the support script read [this guide.](/doc/guide_import.md)
 
