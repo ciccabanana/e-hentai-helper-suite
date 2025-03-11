@@ -36,6 +36,16 @@ Collection of userscripts for a better navigation on e-hentai
 -   No duplicate allowed.
 -   Works both in front page and favorites search bar.
 -   Works on both e-hentai and sadpanda.
+-   Copy, Paste and Import 
+
+### Copy, Paste and Import
+With this feature the user can easily export and import the bookmarks or the setting easly with copy and paste
+
+Using copy and import, the user can paste its bookmarks or setting in the support script "Tags Autocomplete Import Settings & Bookmarks" and import from it every time it wants. This functionality is useful for the user who use incognito mode.
+
+N.B. The feature Import need the support script that can be installed clicking this link: **[Install support script](https://github.com/ciccabanana/e-hentai-helper-suite/blob/master/e-hentai-tags-helper.user.js)** 
+
+For info how to use the support script read [this guide.](/doc/guide_import.md)
 
 ### Cache
 
@@ -110,7 +120,7 @@ Users can also reorder their favorites through the settings using a simple drag-
 - [x] Settings interface
 - [x] Possibility of user to personalize tags color
 - [x] Support for Qualifiers "tag:" / "weak:" / "title:" / "uploader:" / "uploaduid:" / "gid:" / "comment:" / "favnote:"
-- [ ] The possibility of change the keyboard shortcut
+- [x] The possibility of change the keyboard shortcut
 - [ ] An option for enable an automatic clear of expired data in the cache (If users request this feature)
 - [ ] Compatibility to work in the insertion of new tags on the gallery page (Under evaluation)
 - [ ] ...
@@ -121,6 +131,6 @@ Users can also reorder their favorites through the settings using a simple drag-
 
 ## External Tools
 
-- [Tagify](https://github.com/yairEO/tagify) (@4.27.0)
+- [Tagify](https://github.com/yairEO/tagify) (@4.33.2)
 - [Sortable](https://github.com/SortableJS/Sortable)
 - [jQuery SortableJS](https://github.com/SortableJS/jquery-sortablejs)

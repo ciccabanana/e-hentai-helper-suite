@@ -2,7 +2,7 @@
 // @name        Tags Autocomplete
 // @namespace   https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version     0.3.2
+// @version     0.3.3
 // @author      ciccabanana
 // @description Replace normal search bar with new one whit autocomplete of tags
 // @icon        https://e-hentai.org/favicon.ico
@@ -52,7 +52,7 @@
 // @match       *://exhentai.org/?tag_name_bar*
 
 // @require     https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-// @require     https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.27.0/dist/tagify.min.js
+// @require     https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.33.2/dist/tagify.min.js
 
 // @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/resource/tagify.css
 
@@ -300,7 +300,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             <div class="tac-settings">
                 <nav id="tac-topNav">
                     <span id="tac-home" style="float: left; border: none; padding: 0 0 0 15px;">
-                        Tags auto complete 3.0 • 
+                        Tags auto complete 3.3 • 
                         <b><a href="https://github.com/ciccabanana/e-hentai-helper-suite" target="_blank" rel="noopener noreferrer">GitHub Repository</a></b> • 
                         <b><a href="https://forums.e-hentai.org/index.php?showtopic=242709" target="_blank" rel="noopener noreferrer">Support Thread</a></b> 
                     </span>
@@ -2271,7 +2271,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     window.addEventListener('focus', (e) => {
         setTBookmarks();
     });
-    
+
     mConsole.log('Ended Injection');
     if (userSettings.debugConsole) console.timeEnd('[Tags Auto Complete]: Inject time', 'Website loded');
 
