@@ -1,28 +1,67 @@
 // ==UserScript==
-// @name Tags Auto Complete
-// @namespace https://github.com/ciccabanana/e-hentai-helper-suite
+// @name        Tags Autocomplete
+// @namespace   https://github.com/ciccabanana/e-hentai-helper-suite
 // @homepageURL https://github.com/ciccabanana/e-hentai-helper-suite
-// @version 0.3.2
-// @encoding utf-8
+// @version     0.3.3
 // @author      ciccabanana
-// @description     Replace normal search bar with new one whit autocomplete of tags
-// @icon            https://e-hentai.org/favicon.ico
-// @supportURL https://github.com/ciccabanana/e-hentai-helper-suite/issues
-// @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/e-hentai-tags-helper.user.js
-// @include     *://e-hentai.org/
-// @include     *://exhentai.org/
-// @include     /https?:\/\/e(-|x)hentai\.org\/(uploader\/.*|watched.*|tag\/.*|\?f_search.*|\?f_cats.*|doujinshi.*|manga.*|artistcg.*|gamecg.*|western.*|non-h.*|imageset.*|cosplay.*|asianporn.*|misc.*|\?tag_name_bar.*|\?f_shash.*|\?next.*|\?prev.*|favorites\.php.*)/
-// @require https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @description Replace normal search bar with new one whit autocomplete of tags
+// @icon        https://e-hentai.org/favicon.ico
+// @supportURL  https://github.com/ciccabanana/e-hentai-helper-suite/issues
+// @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/e-hentai-tags-helper.user.js
+// @match       *://e-hentai.org/
+// @match       *://e-hentai.org/doujinshi*
+// @match       *://e-hentai.org/manga*
+// @match       *://e-hentai.org/artistcg*
+// @match       *://e-hentai.org/gamecg*
+// @match       *://e-hentai.org/western*
+// @match       *://e-hentai.org/non-h*
+// @match       *://e-hentai.org/imageset*
+// @match       *://e-hentai.org/cosplay*
+// @match       *://e-hentai.org/asianporn*
+// @match       *://e-hentai.org/misc*
+// @match       *://e-hentai.org/uploader/*
+// @match       *://e-hentai.org/watched*
+// @match       *://e-hentai.org/tag/*
+// @match       *://e-hentai.org/?f_search*
+// @match       *://e-hentai.org/?f_cats*
+// @match       *://e-hentai.org/?f_shash*
+// @match       *://e-hentai.org/?next*
+// @match       *://e-hentai.org/?prev*
+// @match       *://e-hentai.org/favorites.php*
+// @match       *://e-hentai.org/?tag_name_bar*
+// @match       *://exhentai.org/
+// @match       *://exhentai.org/doujinshi*
+// @match       *://exhentai.org/manga*
+// @match       *://exhentai.org/artistcg*
+// @match       *://exhentai.org/gamecg*
+// @match       *://exhentai.org/western*
+// @match       *://exhentai.org/non-h*
+// @match       *://exhentai.org/imageset*
+// @match       *://exhentai.org/cosplay*
+// @match       *://exhentai.org/asianporn*
+// @match       *://exhentai.org/misc*
+// @match       *://exhentai.org/uploader/*
+// @match       *://exhentai.org/watched*
+// @match       *://exhentai.org/tag/*
+// @match       *://exhentai.org/?f_search*
+// @match       *://exhentai.org/?f_cats*
+// @match       *://exhentai.org/?f_shash*
+// @match       *://exhentai.org/?next*
+// @match       *://exhentai.org/?prev*
+// @match       *://exhentai.org/favorites.php*
+// @match       *://exhentai.org/?tag_name_bar*
 
-// @require https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.27.0/dist/tagify.min.js
-// @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/resource/tagify.css
+// @require     https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+// @require     https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.33.2/dist/tagify.min.js
 
-// @require https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
-// @require https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js
-// @run-at document-start
+// @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/resource/tagify.css
 
-// @grant   GM_getResourceText
-// @grant   GM.getResourceUrl
+// @require     https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
+// @require     https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js
+// @run-at      document-start
+
+// @grant       GM_getResourceText
+// @grant       GM.getResourceUrl
 
 // ==/UserScript==
 
@@ -35,12 +74,13 @@ var tacDB;
 
 // Object that contain the default settings
 const defaultSettings = {
-    debugConsole: true, // True => Print on console all the events
+    debugConsole: false, // True => Print on console all the events
     originalBar: false, // True => Show the original search bar
     debugText: false, // True => Show the Tagify Text Area
     editableTag: false, // True => All tag are editable
     showNoMatch: false, // True => Enable the footer "No tag Found for: xxxxx"
     urlParameter: false, // True => Enale the this plugin url parameter
+    pasteAsTags: true, // True => Automatically converts pasted text into tags
     expiration: 1,
     dropdownPosition: 'all',
     style: {
@@ -81,7 +121,13 @@ const defaultSettings = {
             // Non-H =>
         },
     },
-    version: 2,
+    shortcut: {
+        ctrlKey: false,
+        shiftKey: false,
+        altKey: true,
+        key: 'b'
+    },
+    version: 3,
 };
 
 // Class wrapper for custom console
@@ -247,12 +293,14 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Inject time');
 
     const open_settinga = async () => {
+        var tac_s_i = sessionStorage.getItem('tac-settings-importer') ? sessionStorage.getItem('tac-settings-importer') : false;
+        
         let settingsHTML = $(`
         <div class="tac-overlay">
             <div class="tac-settings">
                 <nav id="tac-topNav">
                     <span id="tac-home" style="float: left; border: none; padding: 0 0 0 15px;">
-                        Tags auto complete 3.0 • 
+                        Tags auto complete 3.3 • 
                         <b><a href="https://github.com/ciccabanana/e-hentai-helper-suite" target="_blank" rel="noopener noreferrer">GitHub Repository</a></b> • 
                         <b><a href="https://forums.e-hentai.org/index.php?showtopic=242709" target="_blank" rel="noopener noreferrer">Support Thread</a></b> 
                     </span>
@@ -300,6 +348,12 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                         <span>: Use this plugin url parameter</span>
                         </div>
                         <div>
+                            <label>
+                                <input type="checkbox" class="tacCheck" id="pasteAsTags" ${userSettings.pasteAsTags ? 'checked' : ''}>Paste as Tags
+                            </label>
+                        <span>: Automatically converts pasted text into tags</span>
+                        </div>
+                        <div>
                             <p>Position of the suggestion list:</p>
                             <input type="radio" id="all" name="drdpos" class="tacRadio" value="all" ${userSettings.dropdownPosition == 'all' ? 'checked' : ''}>
                             <label for="all">Under the search bar</label>
@@ -308,41 +362,56 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                             <input type="radio" id="text" name="drdpos" class="tacRadio" value="text" ${userSettings.dropdownPosition == 'text' ? 'checked' : ''}>
                             <label for="text">Next to text</label>
                         </div>
+                        <div>
+                            <label for="tacbookmarkskeys"><b>Shortcut for bookmarks:</b></label> 
+                            <input type="text" id="tacbookmarkskeys" value="${(userSettings.shortcut.ctrlKey ? "Ctrl + " : '') + (userSettings.shortcut.altKey ? "Alt + " : '') + (userSettings.shortcut.shiftKey ? "Shift + " : '') + userSettings.shortcut.key}" readonly>
+                        </div>
                     </fieldset>
                     <fieldset>
                         <legend>Cache</legend>
-                        <h3>
-                            <div class="tac-control" id="tac-visControls">
-                                <button title="Remove all expired seach from the cache" id="tagCacheRemoveExpired">Clear Expired</button>
-                                <button title="Remove all values from the cache" id="tagCacheReset">Clear All</button>
-                            </div>
-                        </h3>
-                        <div>
+                        <div class="tac-control-tr" id="tac-visControls">
+                            <button title="Remove all expired seach from the cache" id="tagCacheRemoveExpired">Clear Expired</button>
+                            <button title="Remove all values from the cache" id="tagCacheReset">Clear All</button>
+                        </div>
+                        <div style="max-width: 80%;"
                             <b>Search's cache will be refresh after X days:</b>
                             <input type="number" class="field" id="expiration" min="1" max="365" step="1" onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="${userSettings.expiration}">
                             (Min: 1 day / Max: 365 days) 
                             </br>
                         &#9432; When a term is searched it will be saved in the cache along with the website response, so that when it is searched again it will not need to query the website.
-                        When a saved term will be searched but the date exceeds X days, the cached information will be updated through the website.                         
+                        When a saved term will be searched but the date exceeds X days, the cached information will be updated through the website.
                         </div>
                     </fieldset>
                     <fieldset>
                         <legend>Bookmarks</legend>
-                        <h3>Bookmarks list <small>&#9432; (Max 50, only the first 25 will be showed from dropdown)</small>
-                            <div class="tac-control"">
-                                <button title="Remove all bookmarks" id="tagbkmReset">Reset</button>
-                            </div>
-                        </h3>                        
-                        <textarea name='bookmarks' class='tagify--outside' placeholder='Search tags 'autofocus></textarea>
+                        <h3>Bookmarks list <small>&#9432; (Max 50, only the first 25 will be showed from dropdown)</small></h3>
+                        <div class="tac-control-tr">
+                            <button title="Copy Bookmarks to Clipboard" id="tagbkmToClipboard" class="tac-popup tac-copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="5 -783 682 778" width="16px">
+                                <path d="M226-154q-29.7 0-50.85-21.15T154-226v-480q0-29.7 21.15-50.85T226-778h384q29.7 0 50.85 21.15T682-706v480q0 29.7-21.15 50.85T610-154H226Zm0-72h384v-480H226v480ZM82-10q-29.7 0-50.85-21.15T10-82v-552h72v552h456v72H82Zm144-216v-480 480Z"/>
+                                </svg>
+                            </button>
+                            <button title="Paste Bookmarks from Clipboard" id="tagbkmFromClipboard" class="tac-popup tac-paste">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="139 -893 682 754" width="20px">
+                                    <path d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h171q8-31 33.5-51.5T480-888q34 0 59.5 20.5T573-816h171q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528h-72v120H288v-120h-72v528Zm263.79-528q15.21 0 25.71-10.29t10.5-25.5q0-15.21-10.29-25.71t-25.5-10.5q-15.21 0-25.71 10.29t-10.5 25.5q0 15.21 10.29 25.71t25.5 10.5Z"/>
+                                </svg>
+                            </button>
+                            <button title="Import Bookmarks from Script" id="tagbkmFromScript" class="tac-popup tac-import" ${tac_s_i ? '' : 'disabled'}>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="115 -805 650 690" width="16px">
+                                    <path d="M720-760c0-11.333-3.83-20.833-11.5-28.5Q696.995-800 680-800H480c-22 0-40.83 7.833-56.5 23.5S400-742 400-720v326l-75-75q-12-12-28.5-12T268-469t-12 28.5 12 28.5l144 144c8 8 17.33 12 28 12s20-4 28-12l144-144c7.33-7.333 11.17-16.5 11.5-27.5S620-460 612-468q-12-12-28.5-12.5T555-469l-75 75v-326h200q16.995 0 28.5-11.5c7.67-7.667 11.5-17.167 11.5-28.5M200-120q-33 0-56.5-23.5T120-200v-560q0-17 11.5-28.5T160-800t28.5 11.5T200-760v560h480v-120q0-17 11.5-28.5T720-360t28.5 11.5T760-320v120q0 33-23.5 56.5T680-120z"/>
+                                </svg>
+                            </button>
+                            <button title="Remove all bookmarks" id="tagbkmReset">Reset</button>
+                        </div>
+                        <textarea name='bookmarks' class='more-margin tagify--outside' placeholder='Search tags 'autofocus></textarea>
                     </fieldset>
                     <fieldset>
                         <legend>Custom CSS</legend>
-                        <h3>Tag CSS
-                            <div class="tac-control"">
-                                <button id="tagcssReset">Reset</button>
-                            </div>
-                        </h3>
-                        <div class="ckpiker" style="width: 680px;display: flex;justify-content: space-between; flex-wrap: wrap;">
+                        <h3>Tag CSS</h3>
+                        <div class="tac-control-tr">
+                            <button id="tagcssReset">Reset</button>
+                        </div>
+                        <div class="ckpiker more-margin" style="width: 680px;display: flex;justify-content: space-between; flex-wrap: wrap;">
                             <span>
                                 <input type="color" class="tacColorPiker" id="tcpfemale" value="${tagStyle.female}">
                                 <label for="tcpfemale">Female:</label>
@@ -465,10 +534,41 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                             </span>
                         </div>
                     </fieldset>
+                    <fieldset>
+                        <legend>Info</legend>
+                        <h3>Copy and Paste</h3>
+                        <p>This function allows you to copy the current bookmarks (or settings) to the clipboard, or paste them from the clipboard, overwriting the current ones.</p>
+
+                        <h3>Import from script</h3>
+                        <p>This function allows you to import the bookmarks (or settings) that the user has pasted inside the script.<br>
+                        <b>N.B.</b> <i>This features needs the userscript "Tags Autocomplete Import Settings & Bookmarks" that can it found on the GitHub repository of this script and modifying it.</i> This this functionality is thought for how use the site in incognito mode, so the user don't have to reinsert your bookmarks (or settings) every time.</p>
+
+                        <h3>Use case</h3>
+                        <p>The user can use the copy a paste for save where it prefer the bookmarks and/or settings, such as a txt file.<br>
+                        Or if has the support script quoted above installed it can use the copy function for extract the current bookmarks (or settings) and paste it into the script, so in the future it will be enough to just press import.</p>
+                    </fieldset>
                 </div>
                 <div class="applyContainer">
                     <div class="tac-control"  style="padding-right: 5px;">
-                        <button id="tac-apply">Apply</button>
+                        <button title="Copy Settings to Clipboard" id="tagsettingsToClipboard" class="tac-popup tac-copy">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="5 -783 682 778" width="16px">
+                            <path d="M226-154q-29.7 0-50.85-21.15T154-226v-480q0-29.7 21.15-50.85T226-778h384q29.7 0 50.85 21.15T682-706v480q0 29.7-21.15 50.85T610-154H226Zm0-72h384v-480H226v480ZM82-10q-29.7 0-50.85-21.15T10-82v-552h72v552h456v72H82Zm144-216v-480 480Z"/>
+                            </svg> Copy Settings
+                        </button>
+
+                        <button title="Paste Settings from Clipboard" id="tagsettingsFromClipboard" class="tac-popup tac-paste">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="139 -893 682 754" width="20px">
+                                    <path d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h171q8-31 33.5-51.5T480-888q34 0 59.5 20.5T573-816h171q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528h-72v120H288v-120h-72v528Zm263.79-528q15.21 0 25.71-10.29t10.5-25.5q0-15.21-10.29-25.71t-25.5-10.5q-15.21 0-25.71 10.29t-10.5 25.5q0 15.21 10.29 25.71t25.5 10.5Z"/>
+                            </svg> Paste Settings
+                        </button>
+
+
+                        <button title="import Settings from Script" id="tagsettingsFromScript" class="tac-popup tac-import" ${tac_s_i ? '' : 'disabled'}>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="115 -805 650 690" width="16px">
+                                <path d="M720-760c0-11.333-3.83-20.833-11.5-28.5Q696.995-800 680-800H480c-22 0-40.83 7.833-56.5 23.5S400-742 400-720v326l-75-75q-12-12-28.5-12T268-469t-12 28.5 12 28.5l144 144c8 8 17.33 12 28 12s20-4 28-12l144-144c7.33-7.333 11.17-16.5 11.5-27.5S620-460 612-468q-12-12-28.5-12.5T555-469l-75 75v-326h200q16.995 0 28.5-11.5c7.67-7.667 11.5-17.167 11.5-28.5M200-120q-33 0-56.5-23.5T120-200v-560q0-17 11.5-28.5T160-800t28.5 11.5T200-760v560h480v-120q0-17 11.5-28.5T720-360t28.5 11.5T760-320v120q0 33-23.5 56.5T680-120z"/>
+                            </svg> Import Settings
+                        </button>
+                        <button id="tac-apply" class="tac-popup tac-apply">Apply</button>
                     </div>
                 </div>
             </div>
@@ -487,7 +587,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         // Initialize Tagify on the above input node reference
         // prettier-ignore
         let tagifyBooks = new Tagify(bookmarksDebugText, {
-            validate(data) { return /\w+:\"?[^\$\"]+\$\"?$/.test(data.key); },
+            validate(data) { return /[~-]?\w+:\"?[^\$\"]+\$\"?$/.test(data.key); },
             maxTags: 50, // Let's have more Bookmarks
             dropdown: { position: userSettings.dropdownPosition, highlightFirst: false, },
             keepInvalidTags: false,
@@ -520,7 +620,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 tagifyBooks.whitelist = null;
             });
 
-        let sorableTags = document.querySelector('.tagify--outside');
+        let sorableTags = settings.querySelector('.tagify--outside');
         // Grid demo
         new Sortable(sorableTags, {
             animation: 150,
@@ -564,6 +664,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             userSettings.editableTag = $('#editAllTags').is(':checked');
             userSettings.showNoMatch = $('#showNoMatch').is(':checked');
             userSettings.urlParameter = $('#urlParameter').is(':checked');
+            userSettings.pasteAsTags = $('#pasteAsTags').is(':checked');
             userSettings.expiration = parseInt($('#expiration').val());
             userSettings.dropdownPosition = $('input[name="drdpos"]:checked').val();
             // Refresh website style
@@ -582,6 +683,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             tagStyle.tag1 = $('#tcptag1').val();
             tagStyle.tag2 = $('#tcptag2').val();
             tagStyle.default = $('#tcpdefault').val();
+            userSettings.shortcut = Object.keys(keysPressedResult).length === 0 && keysPressedResult.constructor === Object ? defaultSettings.shortcut : keysPressedResult;
+
             // Save the new settings
             localStorage.setItem('tac-settings', JSON.stringify(userSettings));
 
@@ -602,8 +705,9 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
             tagify.settings.dropdown.position = userSettings.dropdownPosition;
             tagifyBooks.settings.dropdown.position = userSettings.dropdownPosition;
+            tagify.settings.pasteAsTags = userSettings.pasteAsTags
 
-            addBookmarks(JSON.parse(tagifyBooks.DOM.originalInput.tagifyValue ? tagifyBooks.DOM.originalInput.tagifyValue : '[]'));
+            setBookmarks(JSON.parse(tagifyBooks.DOM.originalInput.tagifyValue ? tagifyBooks.DOM.originalInput.tagifyValue : '[]'));
             setTBookmarks();
 
             // Applay the new style
@@ -649,6 +753,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             Array.from(document.getElementsByClassName('tac_default')).forEach((elem) => {
                 elem.style = '--tag-bg:' + tagStyle.default;
             });
+            popupAnimation('#tac-apply')
         });
         $('#tagcssReset').click((e) => {
             // reset variable
@@ -684,6 +789,159 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         });
         $('#tagbkmReset').click((e) => {
             tagifyBooks.removeAllTags();
+        });
+
+        const popupAnimation = async (element) =>{
+            settings.querySelector(element).classList.add("active")
+            setTimeout(() => { settings.querySelector(element).classList.remove("active") }, 2800)
+        }
+
+        let checker = (target, arr) => target.every(v => arr.includes(v));
+
+        const mergeBookmarksNoDuplciate = async (otherBookmarks)=>{
+            let tBookmarks = await getBookmarks();
+
+            // Add element to current bookmarks
+            for (let key in otherBookmarks) {
+                // Ceck if the imported bookmarks contains the 3 essenzial elements
+                if (!checker(['key', 'value', 'bookmarks'],Object.keys(otherBookmarks[key]))){
+                    mConsole.m("bookmarksImport").warn("Imported bookmarks do not have all the necessary or correct keys", otherBookmarks[key])
+                    continue;
+                }
+                tBookmarks.push(otherBookmarks[key])
+            }
+            // Ensure no duplicate 
+            tBookmarks = tBookmarks.filter((value, index, self) =>
+                index === self.findIndex((t) => (
+                    t.key === value.key && t.value === value.value
+                ))
+            )
+            return tBookmarks;
+        }
+
+        $('#tagbkmToClipboard').click((e) => {
+
+            navigator.clipboard.writeText(tagifyBooks.DOM.originalInput.tagifyValue);
+            popupAnimation('#tagbkmToClipboard')
+        });
+        $('#tagbkmFromClipboard').click( async (e) => {
+            let userBookmakrs = await navigator.clipboard.readText()
+            userBookmakrs = JSON.parse(userBookmakrs)
+
+            let tBookmarks = await mergeBookmarksNoDuplciate(userBookmakrs);
+            tagifyBooks.removeAllTags()
+            tagifyBooks.addTags(tBookmarks);
+
+            popupAnimation('#tagbkmFromClipboard')
+        });
+        $('#tagbkmFromScript').click( async (e) => {
+            var userBookmakrs = sessionStorage.getItem('tac-bookmarks') ? JSON.parse(sessionStorage.getItem('tac-bookmarks')) : sessionStorage.setItem('tac-bookmarks', JSON.stringify({ ...userBookmakrs }));
+            // await addBookmarks(userBookmakrs);
+
+            try {
+                let tBookmarks = await mergeBookmarksNoDuplciate(userBookmakrs);
+                tagifyBooks.removeAllTags()
+                tagifyBooks.addTags(tBookmarks);
+            } catch (error) {
+                mConsole.m('open_settinga').error('Error on retrieve bookmarks', error);
+            }
+
+            popupAnimation('#tagbkmFromScript')
+        });
+
+        const importSettings = (newSettings)=>{
+            if (
+                !checker(['debugConsole', 'originalBar', 'debugText', 'editableTag', 'showNoMatch', 'urlParameter', 'pasteAsTags', 'expiration', 'dropdownPosition', 'style', 'shortcut', 'version'], Object.keys(newSettings)) ||
+                !checker(['ctrlKey', 'shiftKey', 'altKey', 'key'], Object.keys(newSettings['shortcut'])) ||
+                !checker(['base', 'exhentai'], Object.keys(newSettings['style'])) ||
+                !checker(['female', 'male', 'language', 'cosplayer', 'parody', 'character', 'group', 'artist', 'mixed', 'other', 'reclass', 'temp', 'tag1', 'tag2', 'default'], Object.keys(newSettings['style']['base'])) ||
+                !checker(['female', 'male', 'language', 'cosplayer', 'parody', 'character', 'group', 'artist', 'mixed', 'other', 'reclass', 'temp', 'tag1', 'tag2', 'default'], Object.keys(newSettings['style']['exhentai']))
+            ) {
+                mConsole.m('settingsImport').warn("The Settings imported don't have all the needed keys", newSettings);
+            }
+            $('#dbConsole').prop('checked', newSettings.debugConsole);
+            $('#originalBar').prop('checked', newSettings.originalBar);
+            $('#dbText').prop('checked', newSettings.debugText);
+            $('#editAllTags').prop('checked', newSettings.editableTag);
+            $('#showNoMatch').prop('checked', newSettings.showNoMatch);
+            $('#urlParameter').prop('checked', newSettings.urlParameter);
+            $('#pasteAsTags').prop('checked', newSettings.pasteAsTags);
+            $('#expiration').val(newSettings.expiration);
+            $(`input[name="drdpos"][value=${newSettings.dropdownPosition}]`).prop('checked', true);
+
+            if (location.hostname == 'e-hentai.org') {
+                userSettings.style.base = { ...newSettings.style.base };
+                tagStyle = newSettings.style.base;
+            } else {
+                userSettings.style.exhentai = { ...newSettings.style.exhentai };
+                tagStyle = newSettings.style.exhentai;
+            }
+
+            $('#tcpfemale').val(tagStyle.female).trigger('change');
+            $('#tcpmale').val(tagStyle.male).trigger('change');
+            $('#tcplanguage').val(tagStyle.language).trigger('change');
+            $('#tcpcosplayer').val(tagStyle.cosplayer).trigger('change');
+            $('#tcpparody').val(tagStyle.parody).trigger('change');
+            $('#tcpcharacter').val(tagStyle.character).trigger('change');
+            $('#tcpgroup').val(tagStyle.group).trigger('change');
+            $('#tcpartist').val(tagStyle.artist).trigger('change');
+            $('#tcpmixed').val(tagStyle.mixed).trigger('change');
+            $('#tcpother').val(tagStyle.other).trigger('change');
+            $('#tcpreclass').val(tagStyle.reclass).trigger('change');
+            $('#tcptemp').val(tagStyle.temp).trigger('change');
+            $('#tcptag1').val(tagStyle.tag1).trigger('change');
+            $('#tcptag2').val(tagStyle.tag2).trigger('change');
+            $('#tcpdefault').val(tagStyle.default).trigger('change');
+
+            keysPressedResult = { ...newSettings.shortcut };
+            let t = (keysPressedResult.ctrlKey ? 'Ctrl + ' : '') + (keysPressedResult.altKey ? 'Alt + ' : '') + (keysPressedResult.shiftKey ? 'Shift + ' : '') + keysPressedResult.key.toUpperCase();
+            $('#tacbookmarkskeys').val(t);
+        }
+
+        $('#tagsettingsToClipboard').click((e) => {
+
+            navigator.clipboard.writeText(JSON.stringify(userSettings));
+            popupAnimation('#tagsettingsToClipboard')
+        });
+        $('#tagsettingsFromClipboard').click(async (e) => {
+            let customSettings = await navigator.clipboard.readText()
+            mConsole.m('import from Clipboard').log(customSettings)
+            customSettings = JSON.parse(customSettings);
+            mConsole.m('import from Clipboard').log(customSettings)
+
+            importSettings(customSettings);
+            popupAnimation('#tagsettingsFromClipboard')
+        });
+        $('#tagsettingsFromScript').click((e) => {
+            var customSettings = sessionStorage.getItem('tac-settings') ? JSON.parse(sessionStorage.getItem('tac-settings')) : sessionStorage.setItem('tac-settings', JSON.stringify({ ...customUserSettings }));
+            importSettings(customSettings);
+            popupAnimation('#tagsettingsFromScript')
+        });
+        
+        let keysPressed = {};
+        let keysPressedResult = {};
+
+        $('#tacbookmarkskeys').on("keydown", (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            keysPressed[e.key] = true;
+
+            mConsole.m('Shortcut-KeyDown').log(keysPressed);
+            mConsole.m('Shortcut-KeyPress').log("Alt:", e.altKey, "Ctrl:", e.ctrlKey, "Shift:", e.shiftKey, "Key:", e.key);
+            if ((e.ctrlKey || e.altKey) && e.keyCode > 32 && e.keyCode < 127) {
+                let t = (e.ctrlKey ? "Ctrl + " : '') + (e.altKey ? "Alt + " : '') + (e.shiftKey ? "Shift + " : '') + e.key.toUpperCase()
+                keysPressedResult.ctrlKey = e.ctrlKey;
+                keysPressedResult.altKey = e.altKey;
+                keysPressedResult.shiftKey = e.shiftKey;
+                keysPressedResult.key = e.key.toUpperCase();
+                $('#tacbookmarkskeys').val(t);
+            }
+        });
+        $('#tacbookmarkskeys').on("keyup", (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            delete keysPressed[e.key];
+            mConsole.m('Shortcut-KeyUp').log(keysPressed, e);
         });
     };
 
@@ -1139,18 +1397,17 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     };
 
     /**
-     * Adds a bookmark entry to the indexedDB database.
+     * Sets bookmarks in IndexedDB.
      *
-     * This function attempts to add a new bookmark entry with the provided input (`bmInput`).
-     * If an entry with the same key (`DB_STORE_NAME_B`) already exists, it updates the existing entry
-     * with the new `fav` value and timestamp.
+     * This function checks if a bookmark entry exists. If it does and is expired, it updates the entry.
+     * Otherwise, it adds a new entry. Debug logs are printed if `userSettings.debugConsole` is enabled.
      *
-     * @param {array} bmInput - The value to be stored as the bookmark.
-     * @returns {Promise<undefined>} A Promise that resolves (undefined) upon successful addition or update,
-     *                                or rejects with an error message if something goes wrong with the transaction.
+     * @async
+     * @param {any} bmInput - The bookmark data to be stored.
+     * @returns {Promise<void>} Resolves when the operation is complete.
      */
-    const addBookmarks = async (bmInput) => {
-        if (userSettings.debugConsole) mConsole.m('IndexDB').m('addBookmarks').debug('shInput:', bmInput);
+    const setBookmarks = async (bmInput) => {
+        if (userSettings.debugConsole) mConsole.m('IndexDB').m('setBookmarks').debug('shInput:', bmInput);
 
         let objStore = getObjectStore(DB_STORE_NAME_B, 'readwrite');
         let openRequest = objStore.openCursor(DB_STORE_NAME_B);
@@ -1160,17 +1417,17 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         openRequest.onsuccess = (e) => {
             let cursor = openRequest.result;
             if (cursor) {
-                // Update entry if key exists and is expired
+                // Update entry if key exists
                 cursor.update(obj);
-                if (userSettings.debugConsole) mConsole.m('IndexDB').m('addBookmarks').debug('Updated', bmInput);
+                if (userSettings.debugConsole) mConsole.m('IndexDB').m('setBookmarks').debug('Updated', bmInput);
             } else {
                 // Otherwise, add entry
                 objStore.add(obj);
-                if (userSettings.debugConsole) mConsole.m('IndexDB').m('addBookmarks').debug('Added', bmInput);
+                if (userSettings.debugConsole) mConsole.m('IndexDB').m('setBookmarks').debug('Added', bmInput);
             }
         };
         openRequest.onerror = (e) => {
-            mConsole.m('IndexDB').m('addBookmarks').error('Something bad happened with the Research:', bmInput, ':', e.target.error);
+            mConsole.m('IndexDB').m('setBookmarks').error('Something bad happened with the Research:', bmInput, ':', e.target.error);
         };
     };
 
@@ -1455,7 +1712,6 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             tagifybar.whitelist.push(...whitelist);
             // Render the suggestions dropdown.
             tagElm ? tagifybar.tagLoading(tagElm, false).dropdown.show(pre_elab_replace.split(':')[1] ?? pre_elab_replace) : tagifybar.loading(false).dropdown.show(pre_elab_replace.split(':')[1] ?? pre_elab_replace);
-
         }, 350);
     };
 
@@ -1518,7 +1774,12 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             }
             $(selector).submit();
         }
-        if (e.detail.event.altKey && e.detail.event.keyCode == 66) {
+        // if (e.detail.event.altKey && e.detail.event.keyCode == 66) {
+        if (
+            e.detail.event.ctrlKey == userSettings.shortcut.ctrlKey &&
+            e.detail.event.altKey == userSettings.shortcut.altKey &&
+            e.detail.event.shiftKey == userSettings.shortcut.shiftKey &&
+            e.detail.event.key.toUpperCase() == userSettings.shortcut.key.toUpperCase()) {
             // alt + B
             e.preventDefault();
             bookmarksEvent();
@@ -1850,7 +2111,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     // Create svg icon
     const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     const iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    iconSvg.setAttribute('viewBox', '0 -960 960 960');
+    iconSvg.setAttribute('viewBox', '73 -885 814 810');
     iconSvg.setAttribute('height', '24');
     iconSvg.setAttribute('width', '24');
     // prettier-ignore
@@ -1898,6 +2159,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     var tagify = new Tagify(tag_bar, {
         transformTag: tagAnalyzer,
         delimiters: null,
+        pasteAsTags: userSettings.pasteAsTags,
         // originalInputValueFormat: valuesArr => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable, ...(item.state != 0) && { state: item.state } }; })),
         // prettier-ignore
         originalInputValueFormat: (valuesArr) => JSON.stringify(valuesArr.map((item) => { return { key: item.key, value: item.value, editable: item.editable }; })),
@@ -1910,12 +2172,13 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             position: userSettings.dropdownPosition,
             highlightFirst: false, // false otherwise can't insert normal text
         },
+        a11y: { focusableTags: true },
         templates: {
             tag(tagData) {
-                return `<tag title='${tagData.key || tagData.value}' contenteditable='false' spellcheck="false" class='${this.settings.classNames.tag} ${tagData.class || ''}' ${this.getAttributes(tagData)}>
+                return `<tag title='${tagData.key || tagData.value}' contenteditable='false' spellcheck="false" tabIndex="${this.settings.a11y.focusableTags ? 0 : -1}" class='${this.settings.classNames.tag} ${tagData.class ? tagData.class : ''}' ${this.getAttributes(tagData)}>
                         <x title='' class='${this.settings.classNames.tagX}' role='button' aria-label='remove tag'></x>
                         <div>                           
-                            <span class='${this.settings.classNames.tagText}'>${tagData.value}</span>
+                            <span class='${this.settings.classNames.tagText}'>${tagData[this.settings.tagTextProp] || tagData.value}</span>
                         </div>
                     </tag>`;
             },
@@ -2003,6 +2266,11 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     // Add possibility to Remove tag with Middle Click
     // prettier-ignore
     middleclickChecker(container, ".tagify__tag", tagify);
+
+    // Refresh on document focus the tagify Bookmarks (the possibility of change in another tabs)
+    window.addEventListener('focus', (e) => {
+        setTBookmarks();
+    });
 
     mConsole.log('Ended Injection');
     if (userSettings.debugConsole) console.timeEnd('[Tags Auto Complete]: Inject time', 'Website loded');
