@@ -7,7 +7,7 @@
 // @description Replace normal search bar with new one whit autocomplete of tags
 // @icon        https://e-hentai.org/favicon.ico
 // @supportURL  https://github.com/ciccabanana/e-hentai-helper-suite/issues
-// @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/e-hentai-tags-helper.user.js
+// @updateURL   https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/e-hentai-tags-helper.user.js
 // @match       *://e-hentai.org/
 // @match       *://e-hentai.org/doujinshi*
 // @match       *://e-hentai.org/manga*
@@ -51,13 +51,11 @@
 // @match       *://exhentai.org/favorites.php*
 // @match       *://exhentai.org/?tag_name_bar*
 
-// @require     https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require     https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.33.2/dist/tagify.min.js
 
-// @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/master/resource/tagify.css
+// @resource    TagifyCSS https://github.com/ciccabanana/e-hentai-helper-suite/raw/develop/resource/tagify.css
 
 // @require     https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
-// @require     https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js
 // @run-at      document-start
 
 // @grant       GM_getResourceText
@@ -295,9 +293,9 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     const open_settinga = async () => {
         var tac_s_i = sessionStorage.getItem('tac-settings-importer') ? sessionStorage.getItem('tac-settings-importer') : false;
         
-        let settingsHTML = $(`
+        let settingsHTML = `
         <div class="tac-overlay">
-            <div class="tac-settings">
+            <div class="tac-settings" id="tac-settings">
                 <nav id="tac-topNav">
                     <span id="tac-home" style="float: left; border: none; padding: 0 0 0 15px;">
                         Tags auto complete 3.3 • 
@@ -364,7 +362,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                         </div>
                         <div>
                             <label for="tacbookmarkskeys"><b>Shortcut for bookmarks:</b></label> 
-                            <input type="text" id="tacbookmarkskeys" value="${(userSettings.shortcut.ctrlKey ? "Ctrl + " : '') + (userSettings.shortcut.altKey ? "Alt + " : '') + (userSettings.shortcut.shiftKey ? "Shift + " : '') + userSettings.shortcut.key}" readonly>
+                            <input type="text" id="tacbookmarkskeys" value="${(userSettings.shortcut.ctrlKey ? 'Ctrl + ' : '') + (userSettings.shortcut.altKey ? 'Alt + ' : '') + (userSettings.shortcut.shiftKey ? 'Shift + ' : '') + userSettings.shortcut.key}" readonly>
                         </div>
                     </fieldset>
                     <fieldset>
@@ -573,13 +571,13 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 </div>
             </div>
         </div>
-        `);
+        `;
 
-        $('body').append(settingsHTML);
+        document.body.insertAdjacentHTML('beforeend', settingsHTML);
 
         // Add possibility to Remove tag with Middle Click
         // prettier-ignore
-        let settings = document.querySelector('.tac-settings')
+        let settings = document.getElementById('tac-settings')
 
         // The DOM element you wish to replace with Tagify
         let bookmarksDebugText = document.querySelector('textarea[name=bookmarks]');
@@ -634,62 +632,68 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             },
         });
 
-        $('body').addClass('noscroll');
-        $('#tac-settings-close').click((e) => {
-            $('.tac-overlay').remove();
-            $('body').removeClass('noscroll');
+        document.body.classList.add('noscroll');
+        document.getElementById('tac-settings-close').addEventListener('click', (e) => {
+            settings.parentNode.remove();
+            document.body.classList.remove('noscroll');
         });
-        $('body').click((e) => {
-            // Exit if clicked otside settings menu
-            if (e.target.className == 'tac-overlay') {
-                $('.tac-overlay').remove();
+        document.body.addEventListener('mousedown', (e) => {
+            // Exit if clicked outside settings menu
+            if (e.target.classList.contains('tac-overlay')) {
+                settings.parentNode.remove();
             }
-            if (!$('.tac-overlay').length) $('body').removeClass('noscroll');
-        });
-        $('.tacColorPiker').on('change', (e) => {
-            document.getElementById('hex' + e.target.id.slice(3)).value = e.target.value.slice(1);
-        });
-        $('.tacColorText').on('change', (e) => {
-            if (/[0-9A-Fa-f]{6}/.test(e.target.value)) {
-                document.getElementById('tcp' + e.target.id.slice(3)).value = '#' + e.target.value;
-            } else {
-                e.target.value = document.getElementById('tcp' + e.target.id.slice(3)).value.slice(1);
+            if (!settings.querySelector('.tac-overlay')) {
+                document.body.classList.remove('noscroll');
             }
         });
-        $('#tac-apply').click((e) => {
+        settings.querySelectorAll('.tacColorPiker').forEach(element => {
+            element.addEventListener('change', (e) => {
+                document.getElementById('hex' + e.target.id.slice(3)).value = e.target.value.slice(1);
+            });
+        });
+        settings.querySelectorAll('.tacColorText').forEach(element => {
+            element.addEventListener('change', (e) => {
+                if (/[0-9A-Fa-f]{6}/.test(e.target.value)) {
+                    document.getElementById('tcp' + e.target.id.slice(3)).value = '#' + e.target.value;
+                } else {
+                    e.target.value = document.getElementById('tcp' + e.target.id.slice(3)).value.slice(1);
+                }
+            });
+        });
+        document.getElementById('tac-apply').addEventListener('click', (e) => {
             // Refresh userSettings variables
-            userSettings.debugConsole = $('#dbConsole').is(':checked');
-            userSettings.originalBar = $('#originalBar').is(':checked');
-            userSettings.debugText = $('#dbText').is(':checked');
-            userSettings.editableTag = $('#editAllTags').is(':checked');
-            userSettings.showNoMatch = $('#showNoMatch').is(':checked');
-            userSettings.urlParameter = $('#urlParameter').is(':checked');
-            userSettings.pasteAsTags = $('#pasteAsTags').is(':checked');
-            userSettings.expiration = parseInt($('#expiration').val());
-            userSettings.dropdownPosition = $('input[name="drdpos"]:checked').val();
+            userSettings.debugConsole = document.getElementById('dbConsole').checked;
+            userSettings.originalBar = document.getElementById('originalBar').checked;
+            userSettings.debugText = document.getElementById('dbText').checked;
+            userSettings.editableTag = document.getElementById('editAllTags').checked;
+            userSettings.showNoMatch = document.getElementById('showNoMatch').checked;
+            userSettings.urlParameter = document.getElementById('urlParameter').checked;
+            userSettings.pasteAsTags = document.getElementById('pasteAsTags').checked;
+            userSettings.expiration = parseInt(document.getElementById('expiration').value, 10);
+            userSettings.dropdownPosition = document.querySelector('input[name="drdpos"]:checked')?.value;
             // Refresh website style
-            tagStyle.female = $('#tcpfemale').val();
-            tagStyle.male = $('#tcpmale').val();
-            tagStyle.language = $('#tcplanguage').val();
-            tagStyle.cosplayer = $('#tcpcosplayer').val();
-            tagStyle.parody = $('#tcpparody').val();
-            tagStyle.character = $('#tcpcharacter').val();
-            tagStyle.group = $('#tcpgroup').val();
-            tagStyle.artist = $('#tcpartist').val();
-            tagStyle.mixed = $('#tcpmixed').val();
-            tagStyle.other = $('#tcpother').val();
-            tagStyle.reclass = $('#tcpreclass').val();
-            tagStyle.temp = $('#tcptemp').val();
-            tagStyle.tag1 = $('#tcptag1').val();
-            tagStyle.tag2 = $('#tcptag2').val();
-            tagStyle.default = $('#tcpdefault').val();
+            tagStyle.female = document.getElementById('tcpfemale').value;
+            tagStyle.male = document.getElementById('tcpmale').value;
+            tagStyle.language = document.getElementById('tcplanguage').value;
+            tagStyle.cosplayer = document.getElementById('tcpcosplayer').value;
+            tagStyle.parody = document.getElementById('tcpparody').value;
+            tagStyle.character = document.getElementById('tcpcharacter').value;
+            tagStyle.group = document.getElementById('tcpgroup').value;
+            tagStyle.artist = document.getElementById('tcpartist').value;
+            tagStyle.mixed = document.getElementById('tcpmixed').value;
+            tagStyle.other = document.getElementById('tcpother').value;
+            tagStyle.reclass = document.getElementById('tcpreclass').value;
+            tagStyle.temp = document.getElementById('tcptemp').value;
+            tagStyle.tag1 = document.getElementById('tcptag1').value;
+            tagStyle.tag2 = document.getElementById('tcptag2').value;
+            tagStyle.default = document.getElementById('tcpdefault').value;
             userSettings.shortcut = Object.keys(keysPressedResult).length === 0 && keysPressedResult.constructor === Object ? defaultSettings.shortcut : keysPressedResult;
 
             // Save the new settings
             localStorage.setItem('tac-settings', JSON.stringify(userSettings));
 
             // Applay userSettings without reload
-            document.querySelector(selector).style.display = userSettings.originalBar ? '' : 'none';
+            document.querySelector(selectorSearchBox).style.display = userSettings.originalBar ? '' : 'none';
             tag_bar.style.display = userSettings.debugText ? 'block' : 'none';
             bookmarksDebugText.style.display = userSettings.debugText ? 'block' : 'none';
 
@@ -755,7 +759,12 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             });
             popupAnimation('#tac-apply')
         });
-        $('#tagcssReset').click((e) => {
+        const resetColorSettings = (elementId, elementStyle) => {
+            let element = document.getElementById(elementId);
+            element.value = elementStyle;
+            element.dispatchEvent(new Event('change'));
+        }
+        document.getElementById('tagcssReset').addEventListener('click', (e) => {
             // reset variable
             if (location.hostname == 'e-hentai.org') {
                 userSettings.style.base = { ...defaultSettings.style.base };
@@ -765,29 +774,30 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 tagStyle = userSettings.style.exhentai;
             }
             // reset the display color
-            $('#tcpfemale').val(tagStyle.female).trigger('change');
-            $('#tcpmale').val(tagStyle.male).trigger('change');
-            $('#tcplanguage').val(tagStyle.language).trigger('change');
-            $('#tcpcosplayer').val(tagStyle.cosplayer).trigger('change');
-            $('#tcpparody').val(tagStyle.parody).trigger('change');
-            $('#tcpcharacter').val(tagStyle.character).trigger('change');
-            $('#tcpgroup').val(tagStyle.group).trigger('change');
-            $('#tcpartist').val(tagStyle.artist).trigger('change');
-            $('#tcpmixed').val(tagStyle.mixed).trigger('change');
-            $('#tcpother').val(tagStyle.other).trigger('change');
-            $('#tcpreclass').val(tagStyle.reclass).trigger('change');
-            $('#tcptemp').val(tagStyle.temp).trigger('change');
-            $('#tcptag1').val(tagStyle.tag1).trigger('change');
-            $('#tcptag2').val(tagStyle.tag2).trigger('change');
-            $('#tcpdefault').val(tagStyle.default).trigger('change');
+            resetColorSettings('tcpfemale', tagStyle.female);
+            resetColorSettings('tcpmale', tagStyle.male);
+            resetColorSettings('tcplanguage', tagStyle.language);
+            resetColorSettings('tcpcosplayer', tagStyle.cosplayer);
+            resetColorSettings('tcpparody', tagStyle.parody);
+            resetColorSettings('tcpcharacter', tagStyle.character);
+            resetColorSettings('tcpgroup', tagStyle.group);
+            resetColorSettings('tcpartist', tagStyle.artist);
+            resetColorSettings('tcpmixed', tagStyle.mixed);
+            resetColorSettings('tcpother', tagStyle.other);
+            resetColorSettings('tcpreclass', tagStyle.reclass);
+            resetColorSettings('tcptemp', tagStyle.temp);
+            resetColorSettings('tcptag1', tagStyle.tag1);
+            resetColorSettings('tcptag2', tagStyle.tag2);
+            resetColorSettings('tcpdefault', tagStyle.default);
+
         });
-        $('#tagCacheRemoveExpired').click((e) => {
+        document.getElementById('tagCacheRemoveExpired').addEventListener('click', (e) => {
             removeOldResearch();
         });
-        $('#tagCacheReset').click((e) => {
+        document.getElementById('tagCacheReset').addEventListener('click', (e) => {
             clearResearch();
         });
-        $('#tagbkmReset').click((e) => {
+        document.getElementById('tagbkmReset').addEventListener('click', (e) => {
             tagifyBooks.removeAllTags();
         });
 
@@ -819,12 +829,12 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             return tBookmarks;
         }
 
-        $('#tagbkmToClipboard').click((e) => {
+        document.getElementById('tagbkmToClipboard').addEventListener('click', (e) => {
 
             navigator.clipboard.writeText(tagifyBooks.DOM.originalInput.tagifyValue);
             popupAnimation('#tagbkmToClipboard')
         });
-        $('#tagbkmFromClipboard').click( async (e) => {
+        document.getElementById('tagbkmFromClipboard').addEventListener('click', async (e) => {
             let userBookmakrs = await navigator.clipboard.readText()
             userBookmakrs = JSON.parse(userBookmakrs)
 
@@ -834,7 +844,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
             popupAnimation('#tagbkmFromClipboard')
         });
-        $('#tagbkmFromScript').click( async (e) => {
+        document.getElementById('tagbkmFromScript').addEventListener('click', async (e) => {
             var userBookmakrs = sessionStorage.getItem('tac-bookmarks') ? JSON.parse(sessionStorage.getItem('tac-bookmarks')) : sessionStorage.setItem('tac-bookmarks', JSON.stringify({ ...userBookmakrs }));
             // await addBookmarks(userBookmakrs);
 
@@ -849,7 +859,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             popupAnimation('#tagbkmFromScript')
         });
 
-        const importSettings = (newSettings)=>{
+        const importSettings = (newSettings) => {
             if (
                 !checker(['debugConsole', 'originalBar', 'debugText', 'editableTag', 'showNoMatch', 'urlParameter', 'pasteAsTags', 'expiration', 'dropdownPosition', 'style', 'shortcut', 'version'], Object.keys(newSettings)) ||
                 !checker(['ctrlKey', 'shiftKey', 'altKey', 'key'], Object.keys(newSettings['shortcut'])) ||
@@ -859,15 +869,15 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             ) {
                 mConsole.m('settingsImport').warn("The Settings imported don't have all the needed keys", newSettings);
             }
-            $('#dbConsole').prop('checked', newSettings.debugConsole);
-            $('#originalBar').prop('checked', newSettings.originalBar);
-            $('#dbText').prop('checked', newSettings.debugText);
-            $('#editAllTags').prop('checked', newSettings.editableTag);
-            $('#showNoMatch').prop('checked', newSettings.showNoMatch);
-            $('#urlParameter').prop('checked', newSettings.urlParameter);
-            $('#pasteAsTags').prop('checked', newSettings.pasteAsTags);
-            $('#expiration').val(newSettings.expiration);
-            $(`input[name="drdpos"][value=${newSettings.dropdownPosition}]`).prop('checked', true);
+            document.getElementById('dbConsole').checked = newSettings.debugConsole;
+            document.getElementById('originalBar').checked = newSettings.originalBar
+            document.getElementById('dbText').checked = newSettings.debugText
+            document.getElementById('editAllTags').checked = newSettings.editableTag
+            document.getElementById('showNoMatch').checked = newSettings.showNoMatch
+            document.getElementById('urlParameter').checked = newSettings.urlParameter
+            document.getElementById('pasteAsTags').checked = newSettings.pasteAsTags
+            document.getElementById('expiration').value = parseInt(newSettings.expiration, 10) || 1;
+            document.querySelector(`input[name="drdpos"][value="${newSettings.dropdownPosition}"]`).checked = true;
 
             if (location.hostname == 'e-hentai.org') {
                 userSettings.style.base = { ...newSettings.style.base };
@@ -877,33 +887,33 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 tagStyle = newSettings.style.exhentai;
             }
 
-            $('#tcpfemale').val(tagStyle.female).trigger('change');
-            $('#tcpmale').val(tagStyle.male).trigger('change');
-            $('#tcplanguage').val(tagStyle.language).trigger('change');
-            $('#tcpcosplayer').val(tagStyle.cosplayer).trigger('change');
-            $('#tcpparody').val(tagStyle.parody).trigger('change');
-            $('#tcpcharacter').val(tagStyle.character).trigger('change');
-            $('#tcpgroup').val(tagStyle.group).trigger('change');
-            $('#tcpartist').val(tagStyle.artist).trigger('change');
-            $('#tcpmixed').val(tagStyle.mixed).trigger('change');
-            $('#tcpother').val(tagStyle.other).trigger('change');
-            $('#tcpreclass').val(tagStyle.reclass).trigger('change');
-            $('#tcptemp').val(tagStyle.temp).trigger('change');
-            $('#tcptag1').val(tagStyle.tag1).trigger('change');
-            $('#tcptag2').val(tagStyle.tag2).trigger('change');
-            $('#tcpdefault').val(tagStyle.default).trigger('change');
+            resetColorSettings('tcpfemale', tagStyle.female);
+            resetColorSettings('tcpmale', tagStyle.male);
+            resetColorSettings('tcplanguage', tagStyle.language);
+            resetColorSettings('tcpcosplayer', tagStyle.cosplayer);
+            resetColorSettings('tcpparody', tagStyle.parody);
+            resetColorSettings('tcpcharacter', tagStyle.character);
+            resetColorSettings('tcpgroup', tagStyle.group);
+            resetColorSettings('tcpartist', tagStyle.artist);
+            resetColorSettings('tcpmixed', tagStyle.mixed);
+            resetColorSettings('tcpother', tagStyle.other);
+            resetColorSettings('tcpreclass', tagStyle.reclass);
+            resetColorSettings('tcptemp', tagStyle.temp);
+            resetColorSettings('tcptag1', tagStyle.tag1);
+            resetColorSettings('tcptag2', tagStyle.tag2);
+            resetColorSettings('tcpdefault', tagStyle.default);
 
             keysPressedResult = { ...newSettings.shortcut };
             let t = (keysPressedResult.ctrlKey ? 'Ctrl + ' : '') + (keysPressedResult.altKey ? 'Alt + ' : '') + (keysPressedResult.shiftKey ? 'Shift + ' : '') + keysPressedResult.key.toUpperCase();
-            $('#tacbookmarkskeys').val(t);
-        }
+            document.getElementById('tacbookmarkskeys').value = t;
+        };
 
-        $('#tagsettingsToClipboard').click((e) => {
+        document.getElementById('tagsettingsToClipboard').addEventListener('click', (e) => {
 
             navigator.clipboard.writeText(JSON.stringify(userSettings));
             popupAnimation('#tagsettingsToClipboard')
         });
-        $('#tagsettingsFromClipboard').click(async (e) => {
+        document.getElementById('tagsettingsFromClipboard').addEventListener('click', async (e) => {
             let customSettings = await navigator.clipboard.readText()
             mConsole.m('import from Clipboard').log(customSettings)
             customSettings = JSON.parse(customSettings);
@@ -912,7 +922,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             importSettings(customSettings);
             popupAnimation('#tagsettingsFromClipboard')
         });
-        $('#tagsettingsFromScript').click((e) => {
+        document.getElementById('tagsettingsFromScript').addEventListener('click', (e) => {
             var customSettings = sessionStorage.getItem('tac-settings') ? JSON.parse(sessionStorage.getItem('tac-settings')) : sessionStorage.setItem('tac-settings', JSON.stringify({ ...customUserSettings }));
             importSettings(customSettings);
             popupAnimation('#tagsettingsFromScript')
@@ -921,7 +931,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
         let keysPressed = {};
         let keysPressedResult = {};
 
-        $('#tacbookmarkskeys').on("keydown", (e) => {
+        document.getElementById('tacbookmarkskeys').addEventListener("keydown", (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             keysPressed[e.key] = true;
@@ -934,10 +944,10 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
                 keysPressedResult.altKey = e.altKey;
                 keysPressedResult.shiftKey = e.shiftKey;
                 keysPressedResult.key = e.key.toUpperCase();
-                $('#tacbookmarkskeys').val(t);
+                document.getElementById('tacbookmarkskeys').value = t;
             }
         });
-        $('#tacbookmarkskeys').on("keyup", (e) => {
+        document.getElementById('tacbookmarkskeys').addEventListener("keyup", (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             delete keysPressed[e.key];
@@ -1772,7 +1782,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             if (location.pathname == '/favorites.php') {
                 selector = 'body > div.ido > div:nth-child(3) > form';
             }
-            $(selector).submit();
+            document.querySelector(selector).submit();
         }
         // if (e.detail.event.altKey && e.detail.event.keyCode == 66) {
         if (
@@ -1947,7 +1957,7 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
             list = list.map((x) => x.key); // extract key
             text = list.join(' ');
         }
-        $('[name="f_search"]')[0].value = text;
+        document.getElementsByName('f_search')[0].value = text;
         setTBookmarks();
     };
 
@@ -2120,18 +2130,18 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
 
     settings.appendChild(iconSvg); // append SVG icon inside settings
 
-    container.appendChild(tag_bar); // Append tab_ga inside container
+    container.appendChild(tag_bar); // Append tab_bar inside container
 
     container.appendChild(settings); // Append settings inside container
 
     // #endregion
 
-    let selector = location.pathname == '/favorites.php' ? 'body > div.ido > div:nth-child(3) > form > div' : '#searchbox > form > div:nth-child(3)';
+    let selectorSearchBox = location.pathname == '/favorites.php' ? 'body > div.ido > div:nth-child(3) > form > div' : '#searchbox > form > div:nth-child(3)';
 
     mConsole.log('Preload complete. Waintg for website...');
     if (userSettings.debugConsole) console.timeLog('[Tags Auto Complete]: Inject time', 'Waintg for website...');
     // Wait the element before assembly all the things
-    await waitForElement(selector);
+    await waitForElement(selectorSearchBox);
     mConsole.log('Website loded');
 
     if (userSettings.debugConsole) console.timeLog('[Tags Auto Complete]: Inject time', 'Website loded');
@@ -2145,15 +2155,20 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     addStyle(CSSxSite);
 
     // Hide the original search bar
-    userSettings.originalBar ? '' : $(selector).attr('style', 'display:none;');
+    userSettings.originalBar ? '' : document.querySelector(selectorSearchBox).style.display = 'none';
 
     // Append
-    $(selector).after(container);
+    document.querySelector(selectorSearchBox).insertAdjacentElement('afterend', container);
 
     // Clone and append button "Clear Filter"
-    $(selector.concat(' > input[type=button]:nth-child(3)')).clone().insertAfter('#c_aut_comp');
+    let buttonClear = document.querySelector(selectorSearchBox + ' > input[type=button]:nth-child(3)');
+    let clonedButtonClear = buttonClear.cloneNode(true);
+    document.querySelector('#c_aut_comp').insertAdjacentElement('afterend', clonedButtonClear);
+    
     // Clone and append button "Apply Filter"
-    $(selector.concat(' > input[type=submit]:nth-child(2)')).clone().insertAfter('#c_aut_comp');
+    let buttonSubmit = document.querySelector(selectorSearchBox + ' > input[type=submit]:nth-child(2)');
+    let clonedButtonSubmit = buttonSubmit.cloneNode(true);
+    document.querySelector('#c_aut_comp').insertAdjacentElement('afterend', clonedButtonSubmit);
 
     // Create tagify bar
     var tagify = new Tagify(tag_bar, {
@@ -2232,8 +2247,8 @@ if (userSettings.debugConsole) console.time('[Tags Auto Complete]: Loading time'
     let old_input = urlParams.get('tag_name_bar');
     old_input = JSON.parse(old_input == '' ? null : old_input);
     if (old_input == null) {
-        // old_input = $('[name="f_search"]')[0].value.match(/([~-]?\w+:\"[^\$\"]+\$\")|([~-]?\w+:[^\$\" ]+\$)|([~-]?\"?[\w\s.-]+\$\"?)|([~-]?\"[^\"]+\")|([^\"\$ \n]+)/g);
-        old_input = $('[name="f_search"]')[0].value.match(/([~-]?(?:\w+:){1,2}\"[^\$\"]+\$\")|([~-]?(?:\w+:){1,2}[^\$\" ]+\$)|([~-]?\"?[\w\s.-]+\$\"?)|([~-]?\"[^\"]+\")|([^\"\$ \n]+)/g);
+        // old_input = document.getElementsByName('f_search')[0].value.match(/([~-]?\w+:\"[^\$\"]+\$\")|([~-]?\w+:[^\$\" ]+\$)|([~-]?\"?[\w\s.-]+\$\"?)|([~-]?\"[^\"]+\")|([^\"\$ \n]+)/g);
+        old_input = document.getElementsByName('f_search')[0].value.match(/([~-]?(?:\w+:){1,2}\"[^\$\"]+\$\")|([~-]?(?:\w+:){1,2}[^\$\" ]+\$)|([~-]?\"?[\w\s.-]+\$\"?)|([~-]?\"[^\"]+\")|([^\"\$ \n]+)/g);
         if (old_input) {
             old_input = old_input.map((item, index) => {
                 return {
